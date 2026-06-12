@@ -394,16 +394,54 @@
     <p>Choose the type of assignment you are reviewing, then paste in your assignment prompt and rubric. The review applies the diagnostic questions most relevant to that assignment type and points to where AI could complete the task without the reasoning showing up.</p>
   </div>
 
-  <!-- Step 1: assignment type -->
+  <!-- Step 1: review method -->
   <div class="section">
-    <div class="section-label"><span class="step">Step 1</span> Assignment type</div>
+    <div class="section-label"><span class="step">Step 1</span> Review method</div>
+    <div class="section-help">Choose how you want the review run.</div>
+    <div class="type-grid" id="modeGrid">
+      <button type="button" class="type-card" data-mode="apikey">
+        <div class="t-name">Use my own AI account</div>
+        <div class="t-patterns">Enter an API key for Claude, ChatGPT, or Gemini. Runs the review here, in your browser, on your usage.</div>
+      </button>
+      <button type="button" class="type-card" data-mode="copy">
+        <div class="t-name">Copy a prompt to use elsewhere</div>
+        <div class="t-patterns">Get a ready-to-paste prompt for any AI tool you already use. Optionally paste the response back for formatted results.</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- API key fields, shown only for apikey mode -->
+  <div class="section" id="apiKeySection" style="display:none;">
+    <div class="section-label"><span class="step"></span> AI provider and key</div>
+    <div class="section-help">Your key is used only for this review and is not saved or sent anywhere except directly to the provider you choose.</div>
+    <div class="type-grid" id="providerGrid">
+      <button type="button" class="type-card" data-provider="claude">
+        <div class="t-name">Claude (Anthropic)</div>
+        <div class="t-patterns">console.anthropic.com</div>
+      </button>
+      <button type="button" class="type-card" data-provider="openai">
+        <div class="t-name">ChatGPT (OpenAI)</div>
+        <div class="t-patterns">platform.openai.com</div>
+      </button>
+      <button type="button" class="type-card" data-provider="gemini">
+        <div class="t-name">Gemini (Google)</div>
+        <div class="t-patterns">aistudio.google.com</div>
+      </button>
+    </div>
+    <label class="field-label" for="apiKeyInput">API key</label>
+    <input type="password" id="apiKeyInput" placeholder="Paste your API key here" style="width:100%; font-family:'Source Sans Pro',sans-serif; font-size:0.95rem; padding:0.6rem 0.9rem; border:1px solid var(--line); border-radius:5px; background:var(--paper); color:var(--ink);">
+  </div>
+
+  <!-- Assignment type -->
+  <div class="section">
+    <div class="section-label"><span class="step">Step 2</span> Assignment type</div>
     <div class="section-help">Select the format that best matches what students submit.</div>
     <div class="type-grid" id="typeGrid"></div>
   </div>
 
-  <!-- Step 2: content -->
+  <!-- Content -->
   <div class="section">
-    <div class="section-label"><span class="step">Step 2</span> Assignment and rubric</div>
+    <div class="section-label"><span class="step">Step 3</span> Assignment and rubric</div>
     <div class="section-help">Paste the assignment prompt as students see it, then the rubric or grading criteria.</div>
 
     <label class="field-label" for="assignmentText">Assignment prompt</label>
@@ -418,15 +456,33 @@
 
   <div class="submit-row">
     <button class="run-btn" id="runBtn" disabled>Review assignment</button>
-    <span class="run-hint" id="runHint">Select an assignment type and paste your assignment to begin.</span>
+    <span class="run-hint" id="runHint">Select a review method, assignment type, and paste your assignment to begin.</span>
   </div>
 
   <div id="loadingBox" class="loading" style="display:none;">
     <div class="spinner"></div>
-    <span>Reviewing assignment against relevant diagnostic questions...</span>
+    <span id="loadingText">Reviewing assignment against relevant diagnostic questions...</span>
   </div>
 
   <div id="errorBox"></div>
+
+  <!-- Copy-prompt output, shown only in copy mode -->
+  <div class="section" id="copyPromptSection" style="display:none;">
+    <div class="section-label">Your review prompt</div>
+    <div class="section-help">Copy this and paste it into Claude, ChatGPT, Gemini, or any AI tool you use.</div>
+    <textarea id="generatedPrompt" readonly style="min-height: 220px; font-family: 'Courier New', monospace; font-size: 0.85rem;"></textarea>
+    <div style="margin-top: 0.75rem; display:flex; gap: 0.75rem; align-items:center; flex-wrap: wrap;">
+      <button class="run-btn" id="copyPromptBtn" style="background: var(--dark-gold);">Copy prompt</button>
+      <span class="run-hint" id="copyHint"></span>
+    </div>
+
+    <label class="field-label" for="pasteResponseText">Optional: paste the AI's response here for formatted results</label>
+    <textarea id="pasteResponseText" placeholder="Paste the full response from your AI tool here, then click Format response."></textarea>
+    <div class="submit-row">
+      <button class="run-btn" id="formatBtn">Format response</button>
+      <span class="run-hint">Or skip this and read the response in the tool you pasted it into.</span>
+    </div>
+  </div>
 
   <!-- Results -->
   <div class="results" id="results">
@@ -469,6 +525,8 @@ const ASSIGNMENT_TYPES = [
 ];
 
 let selectedType = null;
+let selectedMode = null;
+let selectedProvider = null;
 
 const typeGrid = document.getElementById('typeGrid');
 ASSIGNMENT_TYPES.forEach(t => {
@@ -477,7 +535,7 @@ ASSIGNMENT_TYPES.forEach(t => {
   card.type = 'button';
   card.innerHTML = `<div class="t-name">${t.name}</div><div class="t-patterns">Patterns ${t.patterns.join(', ')}</div>`;
   card.addEventListener('click', () => {
-    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('#typeGrid .type-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     selectedType = t;
     updateRunState();
@@ -485,26 +543,58 @@ ASSIGNMENT_TYPES.forEach(t => {
   typeGrid.appendChild(card);
 });
 
+document.querySelectorAll('#modeGrid .type-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('#modeGrid .type-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedMode = card.dataset.mode;
+    document.getElementById('apiKeySection').style.display = selectedMode === 'apikey' ? 'block' : 'none';
+    document.getElementById('copyPromptSection').style.display = 'none';
+    document.getElementById('results').classList.remove('visible');
+    runBtn.textContent = selectedMode === 'copy' ? 'Generate prompt' : 'Review assignment';
+    updateRunState();
+  });
+});
+
+document.querySelectorAll('#providerGrid .type-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('#providerGrid .type-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedProvider = card.dataset.provider;
+    updateRunState();
+  });
+});
+
 const assignmentText = document.getElementById('assignmentText');
 const rubricText = document.getElementById('rubricText');
 const competencyText = document.getElementById('competencyText');
+const apiKeyInput = document.getElementById('apiKeyInput');
 const runBtn = document.getElementById('runBtn');
 const runHint = document.getElementById('runHint');
 
 function updateRunState() {
   const hasType = !!selectedType;
   const hasAssignment = assignmentText.value.trim().length > 20;
-  if (hasType && hasAssignment) {
+  const hasMode = !!selectedMode;
+  let hasProviderInfo = true;
+  if (selectedMode === 'apikey') {
+    hasProviderInfo = !!selectedProvider && apiKeyInput.value.trim().length > 0;
+  }
+
+  if (hasMode && hasType && hasAssignment && hasProviderInfo) {
     runBtn.disabled = false;
-    runHint.textContent = 'Ready to review.';
+    runHint.textContent = selectedMode === 'copy' ? 'Ready to generate your prompt.' : 'Ready to review.';
   } else {
     runBtn.disabled = true;
-    if (!hasType) runHint.textContent = 'Select an assignment type and paste your assignment to begin.';
-    else runHint.textContent = 'Paste your assignment prompt to continue.';
+    if (!hasMode) runHint.textContent = 'Select a review method to begin.';
+    else if (!hasType) runHint.textContent = 'Select an assignment type.';
+    else if (!hasAssignment) runHint.textContent = 'Paste your assignment prompt to continue.';
+    else if (!hasProviderInfo) runHint.textContent = 'Select an AI provider and enter your API key.';
   }
 }
 
 assignmentText.addEventListener('input', updateRunState);
+apiKeyInput.addEventListener('input', updateRunState);
 
 document.getElementById('resetBtn').addEventListener('click', () => {
   document.getElementById('results').classList.remove('visible');
@@ -512,19 +602,16 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-runBtn.addEventListener('click', runReview);
+runBtn.addEventListener('click', () => {
+  if (selectedMode === 'copy') {
+    generatePrompt();
+  } else {
+    runReview();
+  }
+});
 
-async function runReview() {
-  const errorBox = document.getElementById('errorBox');
-  const loadingBox = document.getElementById('loadingBox');
-  const results = document.getElementById('results');
-
-  errorBox.innerHTML = '';
-  results.classList.remove('visible');
-  loadingBox.style.display = 'flex';
-  runBtn.disabled = true;
-
-  const patternsToCheck = selectedType.patterns.map(id => `${id}. ${PATTERNS[id].name} — Diagnostic question: ${PATTERNS[id].question}`).join('\n');
+function buildPrompts() {
+  const patternsToCheck = selectedType.patterns.map(id => `${id}. ${PATTERNS[id].name} -- Diagnostic question: ${PATTERNS[id].question}`).join('\n');
 
   const systemPrompt = `You are reviewing a graduate-level healthcare administration assignment for vulnerability to AI shortcuts, meaning ways a student could produce a strong-looking submission using AI without demonstrating the reasoning, judgment, or competency the assignment is meant to assess.
 
@@ -564,36 +651,132 @@ ${rubricText.value.trim() || '(none provided)'}
 TARGET COMPETENCY:
 ${competencyText.value.trim() || '(none specified)'}`;
 
+  return { systemPrompt, userContent };
+}
+
+function generatePrompt() {
+  const { systemPrompt, userContent } = buildPrompts();
+  const combined = `${systemPrompt}\n\n---\n\n${userContent}`;
+  document.getElementById('generatedPrompt').value = combined;
+  document.getElementById('copyPromptSection').style.display = 'block';
+  document.getElementById('copyHint').textContent = '';
+  document.getElementById('copyPromptSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.getElementById('copyPromptBtn').addEventListener('click', async () => {
+  const text = document.getElementById('generatedPrompt').value;
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userContent }]
-      })
-    });
+    await navigator.clipboard.writeText(text);
+    document.getElementById('copyHint').textContent = 'Copied. Paste it into your AI tool of choice.';
+  } catch (e) {
+    document.getElementById('generatedPrompt').select();
+    document.getElementById('copyHint').textContent = 'Select all and copy manually (clipboard access was blocked).';
+  }
+});
 
-    if (!response.ok) {
-      throw new Error(`Request failed (${response.status})`);
-    }
-
-    const data = await response.json();
-    const textBlock = data.content.find(b => b.type === 'text');
-    if (!textBlock) throw new Error('No response received.');
-
-    let cleaned = textBlock.text.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '');
+document.getElementById('formatBtn').addEventListener('click', () => {
+  const errorBox = document.getElementById('errorBox');
+  errorBox.innerHTML = '';
+  const raw = document.getElementById('pasteResponseText').value.trim();
+  if (!raw) {
+    errorBox.innerHTML = `<div class="error-box">Paste the AI's response above before formatting.</div>`;
+    return;
+  }
+  try {
+    let cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
     const parsed = JSON.parse(cleaned);
+    renderResults(parsed);
+  } catch (e) {
+    errorBox.innerHTML = `<div class="error-box">That response could not be read as formatted results. Make sure you pasted the AI tool's full reply, including the JSON it produced. You can still read the response directly in the tool you used.</div>`;
+  }
+});
+
+async function runReview() {
+  const errorBox = document.getElementById('errorBox');
+  const loadingBox = document.getElementById('loadingBox');
+  const results = document.getElementById('results');
+
+  errorBox.innerHTML = '';
+  results.classList.remove('visible');
+  loadingBox.style.display = 'flex';
+  runBtn.disabled = true;
+
+  const { systemPrompt, userContent } = buildPrompts();
+  const key = apiKeyInput.value.trim();
+
+  try {
+    let parsed;
+
+    if (selectedProvider === 'claude') {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": key,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1500,
+          system: systemPrompt,
+          messages: [{ role: "user", content: userContent }]
+        })
+      });
+      if (!response.ok) throw new Error(`Request failed (${response.status}). Check your API key.`);
+      const data = await response.json();
+      const textBlock = data.content.find(b => b.type === 'text');
+      if (!textBlock) throw new Error('No response received.');
+      parsed = parseJsonResponse(textBlock.text);
+
+    } else if (selectedProvider === 'openai') {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${key}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userContent }
+          ]
+        })
+      });
+      if (!response.ok) throw new Error(`Request failed (${response.status}). Check your API key.`);
+      const data = await response.json();
+      const text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if (!text) throw new Error('No response received.');
+      parsed = parseJsonResponse(text);
+
+    } else if (selectedProvider === 'gemini') {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt + "\n\n---\n\n" + userContent }] }]
+        })
+      });
+      if (!response.ok) throw new Error(`Request failed (${response.status}). Check your API key.`);
+      const data = await response.json();
+      const text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+      if (!text) throw new Error('No response received.');
+      parsed = parseJsonResponse(text);
+    }
 
     renderResults(parsed);
   } catch (err) {
-    errorBox.innerHTML = `<div class="error-box">The review could not be completed (${err.message}). Try again, or check that the assignment text was pasted in.</div>`;
+    errorBox.innerHTML = `<div class="error-box">The review could not be completed (${err.message}).</div>`;
   } finally {
     loadingBox.style.display = 'none';
     runBtn.disabled = false;
   }
+}
+
+function parseJsonResponse(text) {
+  let cleaned = text.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '');
+  return JSON.parse(cleaned);
 }
 
 function renderResults(parsed) {
