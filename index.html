@@ -6,138 +6,182 @@
 <title>AI Tools for Faculty</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --edgewood-red: #BB0000;
-    --dark-red: #860C20;
-    --dark-gold: #C8932B;
-    --medium-gold: #CEB06A;
-    --light-gold: #F3DFAB;
-    --warm-grey: #F0EEEB;
-    --dark-grey: #58595B;
-    --ink: #2A2520;
-    --paper: #FFFDFB;
+    --eu-red: #BB0000;
+    --eu-slate: #5794AD;
+    --eu-gold: #C8932B;
+    --eu-dark-gray: #6D6E71;
+    --eu-light-gray: #C2C6C8;
+    --eu-warm-gray: #F8F6F3;
+    --eu-black: #1a1a1a;
+    --eu-white: #ffffff;
     --line: #E2DED6;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Source Sans Pro', sans-serif;
-    background: var(--warm-grey);
-    color: var(--ink);
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--eu-warm-gray);
+    color: var(--eu-black);
     line-height: 1.6;
   }
 
   .page {
     max-width: 880px;
     margin: 0 auto;
-    padding: 2.5rem 1.5rem 4rem;
+    padding: 0 0 4rem;
   }
 
-  /* ---------- Header ---------- */
-  .masthead {
-    border-bottom: 3px solid var(--edgewood-red);
-    padding-bottom: 1.5rem;
+  /* ---------- Hero ---------- */
+  .hero {
+    background: linear-gradient(135deg, var(--eu-black) 0%, #2a2a2a 40%, #1a1a1a 100%);
+    color: var(--eu-white);
+    padding: 2.5rem 1.5rem 2.25rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
     margin-bottom: 2.5rem;
   }
 
-  .masthead .eyebrow {
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--eu-red) 0%, var(--eu-red) 33%, var(--eu-gold) 33%, var(--eu-gold) 66%, var(--eu-slate) 66%, var(--eu-slate) 100%);
+  }
+
+  .hero-logo {
+    width: 88px;
+    height: auto;
+    margin: 0 auto 1rem;
+    display: block;
+    background: var(--eu-white);
+    border-radius: 10px;
+    padding: 0.5rem;
+  }
+
+  .hero-college {
     font-size: 0.78rem;
-    letter-spacing: 0.14em;
+    font-weight: 500;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--dark-red);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    color: var(--eu-gold);
+    margin-bottom: 1.1rem;
   }
 
-  .masthead h1 {
-    font-family: 'Spectral', serif;
-    font-weight: 600;
-    font-size: 2.1rem;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-    margin-bottom: 0.5rem;
+  .hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.25;
   }
 
-  .masthead p {
-    font-size: 0.98rem;
-    color: var(--dark-grey);
-    max-width: 620px;
+  .hero .subtitle {
+    font-size: 0.95rem;
+    color: var(--eu-light-gray);
+    margin-top: 0.6rem;
+    font-weight: 300;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
   }
 
   /* ---------- Section labels ---------- */
   .section-label {
-    font-family: 'Spectral', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-weight: 600;
     font-size: 1.15rem;
-    color: var(--ink);
+    color: var(--eu-black);
     margin-bottom: 0.75rem;
-  }
-
-  .section-help {
-    font-size: 0.9rem;
-    color: var(--dark-grey);
-    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--eu-red);
   }
 
   /* ---------- Tool cards ---------- */
   .tool-grid {
     display: grid;
-    gap: 1rem;
+    gap: 0.75rem;
     margin-bottom: 2.5rem;
   }
 
   .tool-card {
-    display: block;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--eu-white);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .tool-card:hover {
-    border-color: var(--edgewood-red);
-    box-shadow: 0 2px 10px rgba(187, 0, 0, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
+
+  .tool-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #fdf2e0, #f5e0b8);
+    color: var(--eu-gold);
+  }
+
+  .tool-content { flex: 1; }
 
   .tool-card .t-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 1rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
   }
 
   .tool-card .t-name {
-    font-family: 'Spectral', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-weight: 600;
-    font-size: 1.25rem;
-    color: var(--dark-red);
+    font-size: 1.2rem;
+    color: var(--eu-black);
   }
 
   .tool-card .t-tag {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--dark-gold);
+    color: var(--eu-slate);
     white-space: nowrap;
   }
 
   .tool-card .t-desc {
-    font-size: 0.94rem;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
+    font-size: 0.92rem;
+    color: #3a3a3a;
+    margin-bottom: 0.4rem;
   }
 
   .tool-card .t-link {
     font-size: 0.85rem;
-    color: var(--dark-red);
+    color: var(--eu-red);
     font-weight: 600;
   }
 
@@ -147,22 +191,28 @@
 
   /* ---------- Placeholder card ---------- */
   .tool-card.placeholder {
-    border-style: dashed;
-    color: var(--dark-grey);
+    color: var(--eu-dark-gray);
     cursor: default;
-  }
-
-  .tool-card.placeholder:hover {
-    border-color: var(--line);
+    border: 1px dashed var(--line);
     box-shadow: none;
   }
 
+  .tool-card.placeholder:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .tool-card.placeholder .tool-icon {
+    background: var(--eu-warm-gray);
+    color: var(--eu-dark-gray);
+  }
+
   .tool-card.placeholder .t-name {
-    color: var(--dark-grey);
+    color: var(--eu-dark-gray);
   }
 
   .tool-card.placeholder .t-tag {
-    color: var(--dark-grey);
+    color: var(--eu-dark-gray);
   }
 
   /* ---------- Footer ---------- */
@@ -171,55 +221,69 @@
     padding-top: 1.5rem;
     margin-top: 2.5rem;
     font-size: 0.85rem;
-    color: var(--dark-grey);
+    color: var(--eu-dark-gray);
+    text-align: center;
   }
 
   @media (max-width: 600px) {
-    .masthead h1 { font-size: 1.6rem; }
-    .tool-card { padding: 1.25rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .tool-card { flex-direction: column; text-align: center; padding: 1.5rem 1.25rem; }
+    .tool-card .t-header { flex-direction: column; align-items: center; gap: 0.3rem; }
   }
 </style>
 </head>
 <body>
-<div class="page">
 
-  <div class="masthead">
-    <div class="eyebrow">Edgewood University &middot; MHA Program</div>
+<header class="hero">
+  <div class="container">
+    <img class="hero-logo" src="eu_logo_primary.jpg" alt="Edgewood University">
+    <div class="hero-college">Henry Predolin College of Health Sciences</div>
     <h1>AI tools for faculty</h1>
-    <p>A one-stop home for AI-related tools and resources supporting course design, assignment review, and teaching with AI in mind. Start here, then follow the links below to each tool.</p>
+    <p class="subtitle">A one-stop home for AI-related tools and resources supporting course design, assignment review, and teaching with AI in mind.</p>
   </div>
+</header>
 
-  <div class="section-label">Available tools</div>
-  <div class="tool-grid">
+<div class="page">
+  <div class="container">
 
-    <a class="tool-card" href="ShowWork.html">
-      <div class="t-header">
-        <span class="t-name">ShowWork</span>
-        <span class="t-tag">Assignment review</span>
+    <div class="section-label">Available tools</div>
+    <div class="tool-grid">
+
+      <a class="tool-card" href="ShowWork.html">
+        <div class="tool-icon">SW</div>
+        <div class="tool-content">
+          <div class="t-header">
+            <span class="t-name">ShowWork</span>
+            <span class="t-tag">Assignment review</span>
+          </div>
+          <div class="t-desc">An AI vulnerability review for assignments. Paste in an assignment prompt and rubric, choose the assignment type, and get a structured review of where student reasoning might be invisible, with specific suggestions for revision.</div>
+          <div class="t-link">Open ShowWork</div>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="section-label">Coming soon</div>
+    <div class="tool-grid">
+
+      <div class="tool-card placeholder">
+        <div class="tool-icon">+</div>
+        <div class="tool-content">
+          <div class="t-header">
+            <span class="t-name">More tools</span>
+            <span class="t-tag">In development</span>
+          </div>
+          <div class="t-desc">Additional tools supporting course design, AI-use guideline drafting, and assessment redesign will be added here as they are developed.</div>
+        </div>
       </div>
-      <div class="t-desc">An AI vulnerability review for assignments. Based off of AUPHA Institute for Learning course by Eric Richardson, Jean Gordon, Dawn Oetjen, and Reid Oetjen, ShowWork has been expanded to provide specific guidance based on the type of assigment being reviewed. Paste in an assignment prompt and rubric, choose the assignment type, and get a structured review of where student reasoning might be invisible, with specific suggestions for revision.</div>
-      <div class="t-link">Open ShowWork</div>
-    </a>
 
-  </div>
+    </div>
 
-  <div class="section-label">Coming soon</div>
-  <div class="tool-grid">
-
-    <div class="tool-card placeholder">
-      <div class="t-header">
-        <span class="t-name">More tools</span>
-        <span class="t-tag">In development</span>
-      </div>
-      <div class="t-desc">Additional tools supporting course design, AI-use guideline drafting, and assessment redesign will be added here as they are developed.</div>
+    <div class="footer">
+      Edgewood University, Master of Healthcare Administration program
     </div>
 
   </div>
-
-  <div class="footer">
-    Edgewood University, Master of Healthcare Administration program
-  </div>
-
 </div>
 </body>
 </html>
