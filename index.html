@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools for Faculty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --edgewood-red: #BB0000;
+    --dark-red: #860C20;
+    --dark-gold: #C8932B;
+    --medium-gold: #CEB06A;
+    --light-gold: #F3DFAB;
+    --warm-grey: #F0EEEB;
+    --dark-grey: #58595B;
+    --ink: #2A2520;
+    --paper: #FFFDFB;
+    --line: #E2DED6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background: var(--warm-grey);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ---------- Header ---------- */
+  .masthead {
+    border-bottom: 3px solid var(--edgewood-red);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .masthead .eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dark-red);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .masthead h1 {
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 2.1rem;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+
+  .masthead p {
+    font-size: 0.98rem;
+    color: var(--dark-grey);
+    max-width: 620px;
+  }
+
+  /* ---------- Section labels ---------- */
+  .section-label {
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-help {
+    font-size: 0.9rem;
+    color: var(--dark-grey);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ---------- Tool cards ---------- */
+  .tool-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .tool-card {
+    display: block;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1.5rem 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .tool-card:hover {
+    border-color: var(--edgewood-red);
+    box-shadow: 0 2px 10px rgba(187, 0, 0, 0.08);
+  }
+
+  .tool-card .t-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .tool-card .t-name {
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--dark-red);
+  }
+
+  .tool-card .t-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dark-gold);
+    white-space: nowrap;
+  }
+
+  .tool-card .t-desc {
+    font-size: 0.94rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .tool-card .t-link {
+    font-size: 0.85rem;
+    color: var(--dark-red);
+    font-weight: 600;
+  }
+
+  .tool-card .t-link::after {
+    content: " \2192";
+  }
+
+  /* ---------- Placeholder card ---------- */
+  .tool-card.placeholder {
+    border-style: dashed;
+    color: var(--dark-grey);
+    cursor: default;
+  }
+
+  .tool-card.placeholder:hover {
+    border-color: var(--line);
+    box-shadow: none;
+  }
+
+  .tool-card.placeholder .t-name {
+    color: var(--dark-grey);
+  }
+
+  .tool-card.placeholder .t-tag {
+    color: var(--dark-grey);
+  }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    border-top: 1px solid var(--line);
+    padding-top: 1.5rem;
+    margin-top: 2.5rem;
+    font-size: 0.85rem;
+    color: var(--dark-grey);
+  }
+
+  @media (max-width: 600px) {
+    .masthead h1 { font-size: 1.6rem; }
+    .tool-card { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="eyebrow">Edgewood University &middot; MHA Program</div>
+    <h1>AI tools for faculty</h1>
+    <p>A one-stop home for AI-related tools and resources supporting course design, assignment review, and teaching with AI in mind. Start here, then follow the links below to each tool.</p>
+  </div>
+
+  <div class="section-label">Available tools</div>
+  <div class="tool-grid">
+
+    <a class="tool-card" href="ShowWork.html">
+      <div class="t-header">
+        <span class="t-name">ShowWork</span>
+        <span class="t-tag">Assignment review</span>
+      </div>
+      <div class="t-desc">An AI vulnerability review for assignments. Paste in an assignment prompt and rubric, choose the assignment type, and get a structured review of where student reasoning might be invisible, with specific suggestions for revision.</div>
+      <div class="t-link">Open ShowWork</div>
+    </a>
+
+  </div>
+
+  <div class="section-label">Coming soon</div>
+  <div class="tool-grid">
+
+    <div class="tool-card placeholder">
+      <div class="t-header">
+        <span class="t-name">More tools</span>
+        <span class="t-tag">In development</span>
+      </div>
+      <div class="t-desc">Additional tools supporting course design, AI-use guideline drafting, and assessment redesign will be added here as they are developed.</div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Edgewood University, Master of Healthcare Administration program
+  </div>
+
+</div>
+</body>
+</html>
