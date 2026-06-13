@@ -350,6 +350,8 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     padding: 1.25rem 1.5rem;
     margin-bottom: 1.75rem;
+    white-space: pre-wrap;
+    line-height: 1.7;
     font-size: 1rem;
     line-height: 1.7;
     color: var(--eu-black);
@@ -426,7 +428,15 @@
   }
 
   .pattern-section {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pattern-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .pattern-section .label {
@@ -586,7 +596,7 @@
       <summary class="section-label">Why this tool exists</summary>
       <div class="section-help" style="margin-bottom: 0; margin-top: 1rem;">
         <p style="margin-bottom: 0.9rem;">In the past, our assignments were largely about output, and the process a student used to get there was usually evident in that output. A clear, well-reasoned plan implied a clear, well-reasoned process behind it. Now that students have powerful tools to help produce that output, the old assumption breaks down. A polished deliverable no longer tells us, on its own, how the student got there, or whether the competencies we are trying to assess were exercised.</p>
-        <p style="margin-bottom: 0.9rem;"><strong>A familiar reframe:</strong> early in my career, I worked with children with special needs, and I kept a reminder on my bulletin board: "don&rsquo;t ask if this child is smart, ask how this child is smart." A similar shift applies here. The question is not whether a student used AI, but how do we help this student demonstrate the specific competencies this assignment is meant to reveal?</p>
+        <p style="margin-bottom: 0.9rem;"><strong>A familiar reframe:</strong> early in my career, I worked with children with special needs, and I kept a reminder on my bulletin board: don&rsquo;t ask if this child is smart, ask how this child is smart. A similar shift applies here. The question is not whether a student used AI, but how do we help this student demonstrate the specific competencies this assignment is meant to reveal?</p>
         <p style="margin-bottom: 0.9rem;">This reframe changes the academic integrity conversation too. Reasoning-visible assignments shift the central question from &ldquo;did this student use AI?&rdquo; (faculty proving an absence) to &ldquo;did this student demonstrate the competency?&rdquo; (faculty assessing visible reasoning).</p>
         <p style="margin-bottom: 0;">ShowWork helps you apply that question to a real assignment. Choose your assignment type, paste in the prompt and rubric (and optionally the competency it should demonstrate), and ShowWork checks it against known AI-vulnerability patterns relevant to that type. It returns a summary plus a card for each pattern checked: worth revising, partial, or holding up, each with a plain-language explanation and specific options to consider. None of this requires rewriting the assignment from scratch; the goal is to find the gap between what the assignment claims to measure and what it actually asks students to do, and to close it with a small, targeted change.</p>
         <p style="margin-top: 0.9rem; margin-bottom: 0; font-size: 0.85rem; color: var(--eu-dark-gray); font-style: italic;">ShowWork was based on the work by Jean Gordon, Eric Richardson, Dawn Oetjen, Reid Oetjen, and Nikki Strawn, from the AUPHA Art of Teaching Institute course &ldquo;Future Fluent by Design: Reimagining Assessments for the Age of AI&rdquo; (Medical University of South Carolina and University of Central Florida).</p>
@@ -922,22 +932,36 @@ document.getElementById('formatBtn').addEventListener('click', () => {
 function extractJson(raw) {
   let text = raw.trim();
 
-  // Strip common code fence markers anywhere in the text
-  text = text.replace(/```json/gi, '').replace(/```/g, '');
+  // Strip code fences with or without language tag
+  text = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '');
+
+  // Strip common ChatGPT/Claude wrapper phrases at the start
+  text = text.replace(/^(here is|here's|below is|the following is|formatted results?:?|claude responded:?|result:?)\s*/i, '');
 
   // Try parsing as-is first
-  try {
-    return JSON.parse(text.trim());
-  } catch (e) {}
+  try { return JSON.parse(text.trim()); } catch (e) {}
 
-  // Find the first '{' and the last '}' and try that slice
-  const start = text.indexOf('{');
-  const end = text.lastIndexOf('}');
-  if (start !== -1 && end !== -1 && end > start) {
-    const slice = text.slice(start, end + 1);
-    try {
-      return JSON.parse(slice);
-    } catch (e) {}
+  // Find the outermost { ... } block — handle nested braces
+  let depth = 0, start = -1, end = -1;
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === '{') {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (text[i] === '}') {
+      depth--;
+      if (depth === 0 && start !== -1) { end = i; break; }
+    }
+  }
+
+  if (start !== -1 && end !== -1) {
+    try { return JSON.parse(text.slice(start, end + 1)); } catch (e) {}
+  }
+
+  // Last resort: find first { to last }
+  const s = text.indexOf('{');
+  const e2 = text.lastIndexOf('}');
+  if (s !== -1 && e2 > s) {
+    try { return JSON.parse(text.slice(s, e2 + 1)); } catch (e) {}
   }
 
   return null;
