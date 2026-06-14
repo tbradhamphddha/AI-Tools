@@ -107,37 +107,34 @@
     padding: 0 1.5rem;
   }
 
-  .collapsible summary {
+  .collapsible-trigger {
     cursor: pointer;
-    list-style: none;
+    user-select: none;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
   }
 
-  .collapsible summary::-webkit-details-marker { display: none; }
-
-  .collapsible summary::after {
-    content: '+';
-    font-family: 'Source Sans 3', sans-serif;
+  .collapsible-icon {
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--eu-slate);
-    border-bottom: none;
-    padding-bottom: 0;
+    flex-shrink: 0;
   }
 
-  .collapsible[open] summary::after {
-    content: '\2212';
+  .collapsible-body {
+    overflow: hidden;
+    transition: max-height 0.25s ease, opacity 0.25s ease;
+    max-height: 2000px;
+    opacity: 1;
   }
 
-  .collapsible summary.section-label {
-    margin-bottom: 0;
+  .collapsible-body.collapsed {
+    max-height: 0;
+    opacity: 0;
   }
 
-  .collapsible[open] summary.section-label {
-    margin-bottom: 0;
-  }
+
 
   /* ---------- Section cards ---------- */
   .section {
@@ -624,31 +621,35 @@
   <div class="container">
 
     <!-- Why and what -->
-    <details class="section collapsible" open>
-      <summary class="section-label">Why this tool exists</summary>
-      <div class="section-help" style="margin-bottom: 0; margin-top: 1rem;">
-        <p style="margin-bottom: 0.9rem;">In the past, our assignments were largely about output, and the process a student used to get there was usually evident in that output. A clear, well-reasoned plan implied a clear, well-reasoned process behind it. Now that students have powerful tools to help produce that output, the old assumption breaks down. A polished deliverable no longer tells us, on its own, how the student got there, or whether the competencies we are trying to assess were exercised.</p>
-        <p style="margin-bottom: 0.9rem;"><strong>A familiar reframe:</strong> Early in my career, I worked with children with special needs, and I kept a reminder on my bulletin board: &ldquo;Don&rsquo;t ask if this child is smart, ask how this child is smart.&rdquo; A similar shift applies here. The question is not whether a student used AI, but how do we help this student demonstrate the specific competencies this assignment is meant to reveal.</p>
-        <p style="margin-bottom: 0.9rem;">This reframe changes the academic integrity conversation too. Reasoning-visible assignments shift the central question from &ldquo;did this student use AI?&rdquo; (faculty proving an absence) to &ldquo;did this student demonstrate the competency?&rdquo; (faculty assessing visible reasoning).</p>
-        <p style="margin-bottom: 0;">ShowWork helps you apply that question to a real assignment. Choose your assignment type, paste in the prompt and rubric (and optionally the competency it should demonstrate), and ShowWork checks it against known AI-vulnerability patterns relevant to that type. It returns a summary plus a card for each pattern checked: worth revising, partial, or holding up, each with a plain-language explanation and specific options to consider. None of this requires rewriting the assignment from scratch; the goal is to find the gap between what the assignment claims to measure and what it actually asks students to do, and to close it with a small, targeted change.</p>
-        <p style="margin-top: 0.9rem; margin-bottom: 0; font-size: 0.85rem; color: var(--eu-dark-gray); font-style: italic;">ShowWork was based on the work by Jean Gordon, Eric Richardson, Dawn Oetjen, Reid Oetjen, and Nikki Strawn, from the AUPHA Art of Teaching Institute course &ldquo;Future Fluent by Design: Reimagining Assessments for the Age of AI&rdquo; (Medical University of South Carolina and University of Central Florida).</p>
+    <div class="section collapsible-section" id="whySection">
+      <div class="section-label collapsible-trigger" data-target="whyBody">Why this tool exists <span class="collapsible-icon">&#8722;</span></div>
+      <div class="collapsible-body" id="whyBody">
+        <div class="section-help" style="margin-bottom: 0; margin-top: 1rem;">
+          <p style="margin-bottom: 0.9rem;">In the past, our assignments were largely about output, and the process a student used to get there was usually evident in that output. A clear, well-reasoned plan implied a clear, well-reasoned process behind it. Now that students have powerful tools to help produce that output, the old assumption breaks down. A polished deliverable no longer tells us, on its own, how the student got there, or whether the competencies we are trying to assess were exercised.</p>
+          <p style="margin-bottom: 0.9rem;"><strong>A familiar reframe:</strong> Early in my career, I worked with children with special needs, and I kept a reminder on my bulletin board: &ldquo;Don&rsquo;t ask if this child is smart, ask how this child is smart.&rdquo; A similar shift applies here. The question is not whether a student used AI, but how do we help this student demonstrate the specific competencies this assignment is meant to reveal.</p>
+          <p style="margin-bottom: 0.9rem;">This reframe changes the academic integrity conversation too. Reasoning-visible assignments shift the central question from &ldquo;did this student use AI?&rdquo; (faculty proving an absence) to &ldquo;did this student demonstrate the competency?&rdquo; (faculty assessing visible reasoning).</p>
+          <p style="margin-bottom: 0;">ShowWork helps you apply that question to a real assignment. Choose your assignment type, paste in the prompt and rubric (and optionally the competency it should demonstrate), and ShowWork checks it against known AI-vulnerability patterns relevant to that type. It returns a summary plus a card for each pattern checked: worth revising, partial, or holding up, each with a plain-language explanation and specific options to consider. None of this requires rewriting the assignment from scratch; the goal is to find the gap between what the assignment claims to measure and what it actually asks students to do, and to close it with a small, targeted change.</p>
+          <p style="margin-top: 0.9rem; margin-bottom: 0; font-size: 0.85rem; color: var(--eu-dark-gray); font-style: italic;">ShowWork was based on the work by Jean Gordon, Eric Richardson, Dawn Oetjen, Reid Oetjen, and Nikki Strawn, from the AUPHA Art of Teaching Institute course &ldquo;Future Fluent by Design: Reimagining Assessments for the Age of AI&rdquo; (Medical University of South Carolina and University of Central Florida).</p>
+        </div>
       </div>
-    </details>
+    </div>
 
     <!-- How to use -->
-    <details class="section collapsible" open>
-      <summary class="section-label">How to use this tool</summary>
-      <div class="section-help" style="margin-bottom: 0; margin-top: 1rem;">
-        <ol style="margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 0.6rem;">
-          <li><strong>Choose a review method.</strong> Use your own AI account (Claude, ChatGPT, or Gemini) to run the review directly here, or copy a ready-made prompt to use in whatever AI tool you already have. Note: formatted ShowWork cards work best when using Claude. If you use ChatGPT with the copy prompt, type <em>"Make this output reader friendly"</em> in ChatGPT to get a readable result there.</li>
-          <li><strong>Select your assignment type.</strong> This determines which diagnostic patterns ShowWork checks, so the review stays focused on what matters most for that kind of deliverable.</li>
-          <li><strong>Paste in your assignment and rubric.</strong> Use the assignment prompt as students see it, and the rubric or grading criteria you use to evaluate it. Naming the competency the assignment should demonstrate is optional but helps sharpen the review.</li>
-          <li><strong>Run the review.</strong> ShowWork returns an overall summary and a card for each pattern checked, showing the vulnerability, why it matters, and a few options to consider for addressing it.</li>
-          <li><strong>Use the prompts if helpful.</strong> Each card includes a brainstorm prompt you can copy into any AI tool to explore revision ideas, and a check prompt you can use after revising, to see whether the gap has actually closed.</li>
-          <li><strong>This works on drafts too.</strong> If you are still designing a course, running an early outline through ShowWork can help shape the assignment from the start.</li>
-        </ol>
+    <div class="section collapsible-section" id="howSection">
+      <div class="section-label collapsible-trigger" data-target="howBody">How to use this tool <span class="collapsible-icon">&#8722;</span></div>
+      <div class="collapsible-body" id="howBody">
+        <div class="section-help" style="margin-bottom: 0; margin-top: 1rem;">
+          <ol style="margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            <li><strong>Choose a review method.</strong> Use your own AI account (Claude, ChatGPT, or Gemini) to run the review directly here, or copy a ready-made prompt to use in whatever AI tool you already have. Note: formatted ShowWork cards work best when using Claude. If you use ChatGPT with the copy prompt, type <em>"Make this output reader friendly"</em> in ChatGPT to get a readable result there.</li>
+            <li><strong>Select your assignment type.</strong> This determines which diagnostic patterns ShowWork checks, so the review stays focused on what matters most for that kind of deliverable.</li>
+            <li><strong>Paste in your assignment and rubric.</strong> Use the assignment prompt as students see it, and the rubric or grading criteria you use to evaluate it. Naming the competency the assignment should demonstrate is optional but helps sharpen the review.</li>
+            <li><strong>Run the review.</strong> ShowWork returns an overall summary and a card for each pattern checked, showing the vulnerability, why it matters, and a few options to consider for addressing it.</li>
+            <li><strong>Use the prompts if helpful.</strong> Each card includes a brainstorm prompt you can copy into any AI tool to explore revision ideas, and a check prompt you can use after revising, to see whether the gap has actually closed.</li>
+            <li><strong>This works on drafts too.</strong> If you are still designing a course, running an early outline through ShowWork can help shape the assignment from the start.</li>
+          </ol>
+        </div>
       </div>
-    </details>
+    </div>
 
     <!-- Step 1: review method -->
     <div class="section">
@@ -1326,6 +1327,18 @@ function renderResults(parsed) {
   document.getElementById('results').classList.add('visible');
   document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// Collapsible sections
+document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    const targetId = trigger.dataset.target;
+    const body = document.getElementById(targetId);
+    const icon = trigger.querySelector('.collapsible-icon');
+    const isCollapsed = body.classList.contains('collapsed');
+    body.classList.toggle('collapsed', !isCollapsed);
+    icon.innerHTML = isCollapsed ? '&#8722;' : '+';
+  });
+});
 </script>
 </body>
 </html>
