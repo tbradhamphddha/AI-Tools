@@ -700,11 +700,10 @@
         <span class="run-hint" id="copyHint"></span>
       </div>
 
-      <label class="field-label" for="pasteResponseText">Optional: paste the AI's response here for formatted results</label>
-      <textarea id="pasteResponseText" placeholder="Paste the AI tool's response here. If it returned readable text instead of JSON, go back to your AI tool and say: 'Please return the same result as valid JSON only, with no explanation before or after.' Then paste that response here."></textarea>
+      <label class="field-label" for="pasteResponseText">Optional: Paste the AI's response here to see it formatted as ShowWork cards</label>
+      <textarea id="pasteResponseText" placeholder="Paste your AI tool's full response here, then click Format response. Note: This works best with Claude. If you are using ChatGPT and the cards do not appear, you can read the results directly in ChatGPT by typing 'Make this output reader friendly.'></textarea>
       <div class="submit-row">
         <button class="run-btn" id="formatBtn">Format response</button>
-        <span class="run-hint">Or skip this and read the response in the tool you pasted it into.</span>
       </div>
     </div>
 
