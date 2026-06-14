@@ -549,6 +549,38 @@
     color: var(--eu-black);
   }
 
+  .save-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .save-btn {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.55rem 1.3rem;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .save-btn:hover { opacity: 0.88; }
+
+  .save-btn.download {
+    background: var(--eu-slate);
+    color: var(--eu-white);
+  }
+
+  .save-btn.copy-text {
+    background: var(--eu-warm-gray);
+    color: var(--eu-black);
+    border: 1px solid var(--line);
+  }
+
   footer {
     text-align: center;
     padding: 2rem 1.5rem;
@@ -608,7 +640,7 @@
       <summary class="section-label">How to use this tool</summary>
       <div class="section-help" style="margin-bottom: 0; margin-top: 1rem;">
         <ol style="margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 0.6rem;">
-          <li><strong>Choose a review method.</strong> Use your own AI account (Claude, ChatGPT, or Gemini) to run the review directly here, or copy a ready-made prompt to use in whatever AI tool you already have.</li>
+          <li><strong>Choose a review method.</strong> Use your own AI account (Claude, ChatGPT, or Gemini) to run the review directly here, or copy a ready-made prompt to use in whatever AI tool you already have. Note: formatted ShowWork cards work best when using Claude. If you use ChatGPT with the copy prompt, type <em>"Make this output reader friendly"</em> in ChatGPT to get a readable result there.</li>
           <li><strong>Select your assignment type.</strong> This determines which diagnostic patterns ShowWork checks, so the review stays focused on what matters most for that kind of deliverable.</li>
           <li><strong>Paste in your assignment and rubric.</strong> Use the assignment prompt as students see it, and the rubric or grading criteria you use to evaluate it. Naming the competency the assignment should demonstrate is optional but helps sharpen the review.</li>
           <li><strong>Run the review.</strong> ShowWork returns an overall summary and a card for each pattern checked, showing the vulnerability, why it matters, and a few options to consider for addressing it.</li>
@@ -700,8 +732,8 @@
         <span class="run-hint" id="copyHint"></span>
       </div>
 
-      <label class="field-label" for="pasteResponseText">Optional: Paste the AI's response here to see it formatted as ShowWork cards</label>
-      <textarea id="pasteResponseText" placeholder="Paste your AI tool's full response here, then click Format response. Note: This works best with Claude. If you are using ChatGPT and the cards do not appear, you can read the results directly in ChatGPT by typing 'Make this output reader friendly.'></textarea>
+      <label class="field-label" for="pasteResponseText">Optional: paste the response here to see it formatted as ShowWork cards</label>
+      <textarea id="pasteResponseText" placeholder="Paste your AI tool's full response here, then click Format response. Note: this works best with Claude. If you are using ChatGPT and the cards do not appear, you can read the results directly in ChatGPT by typing 'Make this output reader friendly.'"></textarea>
       <div class="submit-row">
         <button class="run-btn" id="formatBtn">Format response</button>
       </div>
@@ -838,6 +870,134 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const title = document.getElementById('resultsTitle').textContent;
+  const meta = document.getElementById('resultsMeta').textContent;
+  const summary = document.getElementById('summaryBox').textContent;
+  const cards = document.getElementById('patternList').querySelectorAll('.pattern-card');
+
+  const statusLabels = { 'Worth revising': '#BB0000', 'Partial': '#C8932B', 'Holding up': '#639922' };
+
+  let cardsHtml = '';
+  cards.forEach(card => {
+    const name = card.querySelector('.pattern-name')?.textContent || '';
+    const gloss = card.querySelector('.pattern-gloss')?.textContent || '';
+    const score = card.querySelector('.pattern-score')?.textContent || '';
+    const status = card.querySelector('.pattern-status')?.textContent || '';
+    const sections = card.querySelectorAll('.pattern-section');
+    let sectionsHtml = '';
+    sections.forEach(sec => {
+      const label = sec.querySelector('.label')?.textContent || '';
+      const items = sec.querySelectorAll('li');
+      let content = '';
+      if (items.length > 0) {
+        content = '<ul style="margin:0.3rem 0 0 1.2rem; padding:0;">' + Array.from(items).map(li => `<li style="margin-bottom:4px;">${li.textContent}</li>`).join('') + '</ul>';
+      } else {
+        content = `<p style="margin:0.3rem 0 0;">${sec.querySelector('div:not(.label)')?.textContent || ''}</p>`;
+      }
+      sectionsHtml += `<div style="margin-bottom:0.9rem; padding-bottom:0.75rem; border-bottom:1px solid #E2DED6;"><div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5794AD;margin-bottom:0.3rem;">${label}</div>${content}</div>`;
+    });
+
+    const color = status === 'Worth revising' ? '#BB0000' : status === 'Partial' ? '#C8932B' : '#639922';
+    cardsHtml += `
+      <div style="background:#fff;border-radius:10px;border-left:4px solid ${color};box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:1rem;overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:1rem 1.25rem 0.5rem;gap:1rem;">
+          <div>
+            <div style="font-weight:600;font-size:15px;">${name}</div>
+            <div style="font-size:13px;color:#6D6E71;">${gloss}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:12px;color:#6D6E71;">${score}</div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border-radius:4px;background:${color}22;color:${color};margin-top:3px;">${status}</div>
+          </div>
+        </div>
+        <div style="padding:0 1.25rem 1.25rem;">${sectionsHtml}</div>
+      </div>`;
+  });
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Source Sans 3', sans-serif; background: #F8F6F3; color: #1a1a1a; margin: 0; padding: 2rem; line-height: 1.6; }
+  .page { max-width: 780px; margin: 0 auto; }
+  .header { border-bottom: 3px solid #BB0000; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .header h1 { font-size: 1.4rem; font-weight: 600; margin: 0 0 0.25rem; }
+  .header .meta { font-size: 0.85rem; color: #6D6E71; }
+  .summary { background: #fff; border-left: 4px solid #C8932B; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.7; }
+  .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #C2C6C8; font-size: 0.78rem; color: #6D6E71; text-align: center; }
+  @media print { body { background: white; padding: 0; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#C8932B;margin-bottom:0.4rem;">ShowWork · Edgewood University</div>
+    <h1>${title}</h1>
+    <div class="meta">${meta}</div>
+  </div>
+  <div class="summary">${summary}</div>
+  ${cardsHtml}
+  <div class="footer">&copy; 2026 Edgewood University &middot; Henry Predolin College of Health Sciences &middot; Created by Tamala S. Bradham, PhD, DHA</div>
+</div>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ShowWork-review-${Date.now()}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('copyTextBtn').addEventListener('click', async () => {
+  const title = document.getElementById('resultsTitle').textContent;
+  const meta = document.getElementById('resultsMeta').textContent;
+  const summary = document.getElementById('summaryBox').textContent;
+  const cards = document.getElementById('patternList').querySelectorAll('.pattern-card');
+
+  let text = `${title}\n${meta}\n\n`;
+  text += `SUMMARY\n${summary}\n\n`;
+  text += '─'.repeat(60) + '\n\n';
+
+  cards.forEach(card => {
+    const name = card.querySelector('.pattern-name')?.textContent || '';
+    const score = card.querySelector('.pattern-score')?.textContent || '';
+    const status = card.querySelector('.pattern-status')?.textContent || '';
+    text += `${name}  |  ${score}  |  ${status}\n`;
+
+    const sections = card.querySelectorAll('.pattern-section');
+    sections.forEach(sec => {
+      const label = sec.querySelector('.label')?.textContent || '';
+      const items = sec.querySelectorAll('li');
+      text += `\n${label}\n`;
+      if (items.length > 0) {
+        items.forEach(li => { text += `  • ${li.textContent}\n`; });
+      } else {
+        text += `${sec.querySelector('div:not(.label)')?.textContent?.trim() || ''}\n`;
+      }
+    });
+    text += '\n' + '─'.repeat(60) + '\n\n';
+  });
+
+  text += '© 2026 Edgewood University · Henry Predolin College of Health Sciences · Created by Tamala S. Bradham, PhD, DHA';
+
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copyTextBtn');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  } catch (e) {
+    alert('Could not copy automatically. Please select the results and copy manually.');
+  }
+});
+
 runBtn.addEventListener('click', () => {
   if (selectedMode === 'copy') {
     generatePrompt();
@@ -896,7 +1056,7 @@ ${competencyText.value.trim() || '(none specified)'}`;
 
 function generatePrompt() {
   const { systemPrompt, userContent } = buildPrompts();
-  const jsonInstruction = `IMPORTANT: Your response must be valid JSON only — no prose introduction, no explanation before or after, no markdown code fences. The output will be parsed directly by a program. Any text outside the JSON object will cause an error.\n\n`;
+  const jsonInstruction = `IMPORTANT: Return your response as structured data only — a single valid JSON object with no introduction, explanation, or text before or after it. Do not wrap it in code fences. The output will be parsed directly by a program and any text outside the data structure will cause an error.\n\n`;
   const combined = `${jsonInstruction}${systemPrompt}\n\n---\n\n${userContent}`;
   document.getElementById('generatedPrompt').value = combined;
   document.getElementById('copyPromptSection').style.display = 'block';
@@ -925,7 +1085,7 @@ document.getElementById('formatBtn').addEventListener('click', () => {
   }
   const parsed = extractJson(raw);
   if (!parsed) {
-    errorBox.innerHTML = `<div class="error-box">That response could not be read as formatted results. If your AI tool returned readable text instead of JSON, go back to it and say: <em>"Please return the same result as valid JSON only, with no explanation before or after."</em> Then paste that response here instead.</div>`;
+    errorBox.innerHTML = `<div class="error-box">The response could not be formatted as ShowWork cards. If you are using ChatGPT, type <em>"Make this output reader friendly"</em> in ChatGPT and read the results there. The formatted cards work best when using Claude directly in ShowWork.</div>`;
     return;
   }
   renderResults(parsed);
