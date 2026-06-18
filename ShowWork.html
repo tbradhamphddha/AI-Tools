@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShowWork: AI vulnerability review</title>
+<title>ShowWork: AI-Ready Assignment Review</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -18,6 +18,9 @@
     --eu-black: #1a1a1a;
     --eu-white: #ffffff;
     --line: #E2DED6;
+    --d1-color: #5794AD;
+    --d2-color: #C8932B;
+    --d3-color: #BB0000;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,11 +32,7 @@
     line-height: 1.6;
   }
 
-  .page {
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 0 0 4rem;
-  }
+  .page { max-width: 880px; margin: 0 auto; padding: 0 0 4rem; }
 
   /* ---------- Hero ---------- */
   .hero {
@@ -58,9 +57,6 @@
     position: absolute;
     bottom: 0.9rem;
     right: 1.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
     font-size: 0.78rem;
     color: var(--eu-light-gray);
     text-decoration: none;
@@ -101,18 +97,51 @@
     font-weight: 300;
   }
 
-  .container {
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+  .container { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ---------- Section cards ---------- */
+  .section {
+    background: var(--eu-white);
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
+  .section-label {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--eu-black);
+    margin-bottom: 0.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--eu-red);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .section-label .step {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--eu-slate);
+  }
+
+  .section-help {
+    font-size: 0.9rem;
+    color: var(--eu-dark-gray);
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  /* ---------- Collapsible sections ---------- */
   .collapsible-trigger {
     cursor: pointer;
     user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
   .collapsible-icon {
@@ -134,47 +163,66 @@
     opacity: 0;
   }
 
-
-
-  /* ---------- Section cards ---------- */
-  .section {
-    background: var(--eu-white);
-    border-radius: 12px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    padding: 1.5rem 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .section-label {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 600;
-    font-size: 1.15rem;
-    color: var(--eu-black);
-    margin-bottom: 0.25rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--eu-red);
+  /* ---------- Checkboxes ---------- */
+  .checkbox-group {
     display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
   }
 
-  .section-label .step {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--eu-slate);
-  }
-
-  .section-help {
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--eu-warm-gray);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
     font-size: 0.9rem;
-    color: var(--eu-dark-gray);
-    margin-top: 0.75rem;
-    margin-bottom: 1rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
   }
 
-  /* ---------- Choice cards (mode, provider, type) ---------- */
+  .checkbox-item:hover { border-color: var(--eu-slate); }
+
+  .checkbox-item.checked {
+    background: #EEF4F7;
+    border-color: var(--eu-slate);
+    font-weight: 600;
+    color: var(--eu-black);
+  }
+
+  .checkbox-item input[type="checkbox"] { display: none; }
+
+  .checkbox-check {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--eu-light-gray);
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--eu-slate);
+    flex-shrink: 0;
+  }
+
+  .checkbox-item.checked .checkbox-check {
+    border-color: var(--eu-slate);
+    background: var(--eu-slate);
+    color: white;
+  }
+
+  /* ---------- Purpose checkboxes ---------- */
+  .purpose-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  /* ---------- Assignment type cards ---------- */
   .type-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -190,6 +238,7 @@
     transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
     font-size: 0.92rem;
     text-align: left;
+    font-family: 'Source Sans 3', sans-serif;
   }
 
   .type-card:hover {
@@ -205,19 +254,8 @@
     font-weight: 600;
   }
 
-  .type-card .t-name {
-    font-weight: 600;
-    color: var(--eu-black);
-    margin-bottom: 0.2rem;
-  }
-
+  .type-card .t-name { font-weight: 600; color: var(--eu-black); }
   .type-card.selected .t-name { color: var(--eu-red); }
-
-  .type-card .t-patterns {
-    font-size: 0.78rem;
-    color: var(--eu-dark-gray);
-    line-height: 1.5;
-  }
 
   /* ---------- Text inputs ---------- */
   label.field-label {
@@ -229,11 +267,11 @@
     margin-top: 1.1rem;
   }
 
-  label.field-label:first-of-type { margin-top: 1.1rem; }
+  label.field-label:first-of-type { margin-top: 0; }
 
   textarea, input[type="password"] {
     width: 100%;
-    min-height: 140px;
+    min-height: 120px;
     font-family: 'Source Sans 3', sans-serif;
     font-size: 0.95rem;
     padding: 0.75rem 0.9rem;
@@ -246,13 +284,32 @@
   }
 
   input[type="password"] { min-height: auto; }
+  textarea:focus, input:focus { outline: 2px solid var(--eu-slate); outline-offset: 1px; }
+  textarea::placeholder { color: #A8A39A; }
 
-  textarea:focus, input:focus, .type-card:focus-visible {
-    outline: 2px solid var(--eu-slate);
-    outline-offset: 1px;
+  /* ---------- Review method ---------- */
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
   }
 
-  textarea::placeholder { color: #A8A39A; }
+  .mode-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    background: var(--eu-white);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    text-align: left;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+
+  .mode-card:hover { border-color: var(--eu-slate); box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .mode-card.selected { border-color: var(--eu-red); border-width: 2px; background: #FDF4F4; }
+  .mode-card .m-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+  .mode-card.selected .m-name { color: var(--eu-red); }
+  .mode-card .m-desc { font-size: 0.82rem; color: var(--eu-dark-gray); line-height: 1.4; }
 
   /* ---------- Submit ---------- */
   .submit-row {
@@ -277,16 +334,7 @@
   }
 
   button.run-btn:hover:not(:disabled) { background: #930000; }
-
-  button.run-btn:disabled {
-    background: #D9B8B8;
-    cursor: not-allowed;
-  }
-
-  .run-hint {
-    font-size: 0.85rem;
-    color: var(--eu-dark-gray);
-  }
+  button.run-btn:disabled { background: #D9B8B8; cursor: not-allowed; }
 
   /* ---------- Loading ---------- */
   .loading {
@@ -308,14 +356,14 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ---------- Copy prompt section ---------- */
+  #copyPromptSection { display: none; }
+
   /* ---------- Results ---------- */
   .results { display: none; }
   .results.visible { display: block; }
 
-  .results-header {
-    margin-top: 2.5rem;
-    margin-bottom: 1.5rem;
-  }
+  .results-header { margin-top: 2.5rem; margin-bottom: 1.5rem; }
 
   .results-header .eyebrow {
     font-size: 0.78rem;
@@ -334,12 +382,21 @@
     border-bottom: 2px solid var(--eu-red);
   }
 
-  .results-header .meta {
-    font-size: 0.88rem;
-    color: var(--eu-dark-gray);
-    margin-top: 0.6rem;
+  /* ---------- Disclaimer box ---------- */
+  .disclaimer-box {
+    background: #FBF1DD;
+    border: 1px solid var(--eu-gold);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #3a3a3a;
+    line-height: 1.65;
   }
 
+  .disclaimer-box strong { color: #633806; }
+
+  /* ---------- Summary box ---------- */
   .summary-box {
     background: var(--eu-white);
     border-radius: 12px;
@@ -347,114 +404,139 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     padding: 1.25rem 1.5rem;
     margin-bottom: 1.75rem;
-    white-space: pre-wrap;
-    line-height: 1.7;
     font-size: 1rem;
     line-height: 1.7;
-    color: var(--eu-black);
+    white-space: pre-wrap;
   }
 
-  /* Pattern cards */
-  .pattern-card {
+  /* ---------- Strengths section ---------- */
+  .strengths-header {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--eu-black);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #639922;
+  }
+
+  .strength-card {
     background: var(--eu-white);
     border-radius: 12px;
+    border-left: 4px solid #639922;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    padding: 1.1rem 1.4rem;
     margin-bottom: 1rem;
-    overflow: hidden;
   }
 
-  .pattern-card.flag-high { border-left: 4px solid var(--eu-red); }
-  .pattern-card.flag-moderate { border-left: 4px solid var(--eu-gold); }
-  .pattern-card.flag-low { border-left: 4px solid #639922; }
-
-  .pattern-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.1rem 1.4rem 0.5rem;
-  }
-
-  .pattern-name-group .pattern-name {
+  .strength-card .s-pattern {
     font-family: 'Playfair Display', Georgia, serif;
     font-weight: 600;
-    font-size: 1.08rem;
+    font-size: 1rem;
+    color: #27500A;
+    margin-bottom: 0.25rem;
+  }
+
+  .strength-card .s-code {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #639922;
+    margin-bottom: 0.5rem;
+  }
+
+  .strength-card .s-body {
+    font-size: 0.93rem;
+    line-height: 1.65;
     color: var(--eu-black);
   }
 
-  .pattern-name-group .pattern-gloss {
-    font-size: 0.85rem;
-    color: var(--eu-dark-gray);
-    margin-top: 0.15rem;
-  }
-
-  .pattern-status-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.3rem;
-    flex-shrink: 0;
-  }
-
-  .pattern-score {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--eu-dark-gray);
+  /* ---------- Domain sections ---------- */
+  .domain-header {
     font-family: 'Playfair Display', Georgia, serif;
-    white-space: nowrap;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--eu-white);
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
   }
 
-  .pattern-status {
+  .domain-d1 { background: var(--d1-color); }
+  .domain-d2 { background: var(--d2-color); }
+  .domain-d3 { background: var(--d3-color); }
+
+  /* ---------- Opportunity cards ---------- */
+  .opportunity-card {
+    background: var(--eu-white);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .opp-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .opp-pattern {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--eu-black);
+  }
+
+  .opp-code {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--eu-dark-gray);
+    background: var(--eu-warm-gray);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .opp-flag {
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 0.25rem 0.65rem;
+    padding: 2px 10px;
     border-radius: 4px;
-    white-space: nowrap;
   }
 
-  .flag-high .pattern-status { background: #FCEBEB; color: #791F1F; }
-  .flag-moderate .pattern-status { background: #FAEEDA; color: #633806; }
-  .flag-low .pattern-status { background: #EAF3DE; color: #27500A; }
+  .flag-additive { background: #E8F0F4; color: #2A5C78; }
+  .flag-structural { background: #FAEEDA; color: #633806; }
 
-  .pattern-body {
-    padding: 0 1.4rem 1.25rem;
-    font-size: 0.94rem;
-    color: var(--eu-black);
-  }
-
-  .pattern-section {
-    margin-bottom: 0.9rem;
+  .opp-section {
+    margin-bottom: 0.85rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--line);
+    font-size: 0.94rem;
+    line-height: 1.65;
   }
 
-  .pattern-section:last-of-type {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
+  .opp-section:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
 
-  .pattern-section .label {
-    font-size: 0.75rem;
+  .opp-label {
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--eu-slate);
     margin-bottom: 0.3rem;
   }
 
-  .pattern-section ul {
-    margin: 0;
-    padding-left: 1.2rem;
-  }
+  .opp-section ul { margin: 0; padding-left: 1.2rem; }
+  .opp-section ul li { margin-bottom: 0.3rem; }
 
-  .pattern-section ul li {
-    margin-bottom: 0.25rem;
-  }
-
-  /* Prompt accordions */
+  /* ---------- Prompt accordions ---------- */
   .prompt-group {
     border-top: 1px solid var(--line);
     padding-top: 0.9rem;
@@ -477,22 +559,13 @@
     cursor: pointer;
     color: var(--eu-black);
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    list-style: none;
   }
 
   .prompt-accordion summary::-webkit-details-marker { display: none; }
-
-  .prompt-accordion summary::after {
-    content: '+';
-    font-size: 1rem;
-    color: var(--eu-slate);
-    font-weight: 400;
-  }
-
-  .prompt-accordion[open] summary::after {
-    content: '\2212';
-  }
+  .prompt-accordion summary::after { content: '+'; color: var(--eu-slate); font-weight: 400; }
+  .prompt-accordion[open] summary::after { content: '\2212'; }
 
   .prompt-text {
     font-size: 0.85rem;
@@ -511,41 +584,25 @@
     border-radius: 6px;
     padding: 0.35rem 0.8rem;
     cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
   }
 
   .copy-prompt-btn:hover { border-color: var(--eu-slate); }
 
-  .error-box {
-    background: #FCEBEB;
-    border: 1px solid var(--eu-red);
-    border-radius: 8px;
+  /* ---------- Re-run note ---------- */
+  .rerun-note {
+    background: var(--eu-white);
+    border-radius: 10px;
+    border-left: 4px solid var(--eu-slate);
     padding: 1rem 1.25rem;
-    font-size: 0.9rem;
-    color: #791F1F;
     margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #3a3a3a;
+    line-height: 1.65;
   }
 
-  .reset-row {
-    margin-top: 2rem;
-    text-align: center;
-  }
-
-  .reset-row button {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 0.88rem;
-    color: var(--eu-dark-gray);
-    background: none;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 0.5rem 1.2rem;
-    cursor: pointer;
-  }
-
-  .reset-row button:hover {
-    border-color: var(--eu-slate);
-    color: var(--eu-black);
-  }
-
+  /* ---------- Save / reset ---------- */
   .save-row {
     display: flex;
     justify-content: center;
@@ -566,18 +623,36 @@
   }
 
   .save-btn:hover { opacity: 0.88; }
+  .save-btn.download { background: var(--eu-slate); color: var(--eu-white); }
+  .save-btn.copy-text { background: var(--eu-warm-gray); color: var(--eu-black); border: 1px solid var(--line); }
 
-  .save-btn.download {
-    background: var(--eu-slate);
-    color: var(--eu-white);
-  }
+  .reset-row { margin-top: 1rem; text-align: center; }
 
-  .save-btn.copy-text {
-    background: var(--eu-warm-gray);
-    color: var(--eu-black);
+  .reset-row button {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.88rem;
+    color: var(--eu-dark-gray);
+    background: none;
     border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
   }
 
+  .reset-row button:hover { border-color: var(--eu-slate); color: var(--eu-black); }
+
+  /* ---------- Error ---------- */
+  .error-box {
+    background: #FCEBEB;
+    border: 1px solid var(--eu-red);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    color: #791F1F;
+    margin-top: 1rem;
+  }
+
+  /* ---------- Footer ---------- */
   footer {
     text-align: center;
     padding: 2rem 1.5rem;
@@ -587,21 +662,12 @@
     margin-top: 2.5rem;
   }
 
-  footer a {
-    color: var(--eu-slate);
-    text-decoration: none;
-  }
-
-  /* Copy prompt / paste-back section */
-  #generatedPrompt, #pasteResponseText {
-    font-family: 'Source Sans 3', sans-serif;
-  }
+  footer a { color: var(--eu-slate); text-decoration: none; }
 
   @media (max-width: 600px) {
     .hero h1 { font-size: 1.6rem; }
     .section { padding: 1.25rem; }
-    .pattern-header { flex-direction: column; }
-    .pattern-status-group { align-items: flex-start; }
+    .mode-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -613,128 +679,162 @@
     <img class="hero-logo" src="eu_logo_primary.jpg" alt="Edgewood University">
     <div class="hero-college">Henry Predolin College of Health Sciences</div>
     <h1>ShowWork</h1>
-    <p class="subtitle">An AI vulnerability review for assignments</p>
+    <p class="subtitle">Designing assignments that support responsible AI use</p>
   </div>
 </header>
 
 <div class="page">
   <div class="container">
 
-    <!-- Why and what -->
-    <div class="section collapsible-section" id="whySection">
-      <div class="section-label collapsible-trigger" data-target="whyBody">Why this tool exists <span class="collapsible-icon">&#8722;</span></div>
+    <!-- Why this tool exists -->
+    <div class="section">
+      <div class="section-label collapsible-trigger" data-target="whyBody">
+        Why this tool exists
+        <span class="collapsible-icon">&#8722;</span>
+      </div>
       <div class="collapsible-body" id="whyBody">
-        <div class="section-help" style="margin-bottom: 0; margin-top: 1rem;">
+        <div class="section-help" style="margin-top: 1rem; margin-bottom: 0;">
           <p style="margin-bottom: 0.9rem;">In the past, our assignments were largely about output, and the process a student used to get there was usually evident in that output. A clear, well-reasoned plan implied a clear, well-reasoned process behind it. Now that students have powerful tools to help produce that output, the old assumption breaks down. A polished deliverable no longer tells us, on its own, how the student got there, or whether the competencies we are trying to assess were exercised.</p>
           <p style="margin-bottom: 0.9rem;"><strong>A familiar reframe:</strong> Early in my career, I worked with children with special needs, and I kept a reminder on my bulletin board: &ldquo;Don&rsquo;t ask if this child is smart, ask how this child is smart.&rdquo; A similar shift applies here. The question is not whether a student used AI, but how do we help this student demonstrate the specific competencies this assignment is meant to reveal.</p>
           <p style="margin-bottom: 0.9rem;">This reframe changes the academic integrity conversation too. Reasoning-visible assignments shift the central question from &ldquo;did this student use AI?&rdquo; (faculty proving an absence) to &ldquo;did this student demonstrate the competency?&rdquo; (faculty assessing visible reasoning).</p>
-          <p style="margin-bottom: 0;">ShowWork helps you apply that question to a real assignment. Choose your assignment type, paste in the prompt and rubric (and optionally the competency it should demonstrate), and ShowWork checks it against known AI-vulnerability patterns relevant to that type. It returns a summary plus a card for each pattern checked: worth revising, partial, or holding up, each with a plain-language explanation and specific options to consider. None of this requires rewriting the assignment from scratch; the goal is to find the gap between what the assignment claims to measure and what it actually asks students to do, and to close it with a small, targeted change.</p>
+          <p style="margin-bottom: 0;">ShowWork helps you apply that question to a real assignment. Paste in your assignment and rubric, and ShowWork reviews it against nine diagnostic patterns across three domains of responsible AI use — returning what your assignment already does well and the highest-leverage opportunity to strengthen it further.</p>
           <p style="margin-top: 0.9rem; margin-bottom: 0; font-size: 0.85rem; color: var(--eu-dark-gray); font-style: italic;">ShowWork was based on the work by Jean Gordon, Eric Richardson, Dawn Oetjen, Reid Oetjen, and Nikki Strawn, from the AUPHA Art of Teaching Institute course &ldquo;Future Fluent by Design: Reimagining Assessments for the Age of AI&rdquo; (Medical University of South Carolina and University of Central Florida).</p>
         </div>
       </div>
     </div>
 
     <!-- How to use -->
-    <div class="section collapsible-section" id="howSection">
-      <div class="section-label collapsible-trigger" data-target="howBody">How to use this tool <span class="collapsible-icon">&#8722;</span></div>
+    <div class="section">
+      <div class="section-label collapsible-trigger" data-target="howBody">
+        How to use this tool
+        <span class="collapsible-icon">&#8722;</span>
+      </div>
       <div class="collapsible-body" id="howBody">
-        <div class="section-help" style="margin-bottom: 0; margin-top: 1rem;">
+        <div class="section-help" style="margin-top: 1rem; margin-bottom: 0;">
           <ol style="margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 0.6rem;">
-            <li><strong>Choose a review method.</strong> Use your own AI account (Claude, ChatGPT, or Gemini) to run the review directly here, or copy a ready-made prompt to use in whatever AI tool you already have. Note: formatted ShowWork cards work best when using Claude. If you use ChatGPT with the copy prompt, type <em>"Make this output reader friendly"</em> in ChatGPT to get a readable result there.</li>
-            <li><strong>Select your assignment type.</strong> This determines which diagnostic patterns ShowWork checks, so the review stays focused on what matters most for that kind of deliverable.</li>
-            <li><strong>Paste in your assignment and rubric.</strong> Use the assignment prompt as students see it, and the rubric or grading criteria you use to evaluate it. Naming the competency the assignment should demonstrate is optional but helps sharpen the review.</li>
-            <li><strong>Run the review.</strong> ShowWork returns an overall summary and a card for each pattern checked, showing the vulnerability, why it matters, and a few options to consider for addressing it.</li>
-            <li><strong>Use the prompts if helpful.</strong> Each card includes a brainstorm prompt you can copy into any AI tool to explore revision ideas, and a check prompt you can use after revising, to see whether the gap has actually closed.</li>
-            <li><strong>This works on drafts too.</strong> If you are still designing a course, running an early outline through ShowWork can help shape the assignment from the start.</li>
+            <li><strong>Fill in what you have.</strong> The more context you provide, the more specific the review. At minimum, paste your assignment prompt. Adding the rubric, purpose, program context, and competency will sharpen every finding.</li>
+            <li><strong>Choose a review method.</strong> Use your own AI account (Claude, ChatGPT, or Gemini) to run the review here, or copy a ready-made prompt to use in any AI tool you already have. Formatted ShowWork cards work best with Claude. If you use ChatGPT, type <em>"Make this output reader friendly"</em> in ChatGPT to get a readable result there.</li>
+            <li><strong>Read the strengths first.</strong> ShowWork will tell you what your assignment is already doing well before identifying anything to improve. Take that seriously — these are things worth preserving.</li>
+            <li><strong>One opportunity per domain.</strong> ShowWork surfaces the highest-leverage opportunity in each of the three domains. This is the change most likely to move the needle. Running your assignment again after revising may surface a different opportunity in that domain — that&rsquo;s by design.</li>
+            <li><strong>Understanding your score.</strong> ShowWork scores each pattern from 1 to 3. Your total out of 27 reflects how well the assignment currently supports responsible AI use. 22 or above (80%+) means the assignment is already doing most things well — focus on preserving strengths. 14 to 21 (50–79%, Developing) means there are meaningful opportunities worth exploring. Below 14 (under 50%) suggests the assignment may benefit from a more intentional redesign conversation.</li>
+            <li><strong>Works on drafts too.</strong> If you are still designing a course, running an early draft through ShowWork can help shape the assignment from the start.</li>
           </ol>
         </div>
       </div>
     </div>
 
-    <!-- Step 1: review method -->
+    <!-- Assignment context -->
     <div class="section">
-      <div class="section-label"><span class="step">Step 1</span> Review method</div>
+      <div class="section-label"><span class="step">Context</span> About this assignment</div>
+      <div class="section-help">Tell ShowWork about the assignment. The more you share, the more specific the review.</div>
+
+      <label class="field-label">What is the primary purpose of this assignment? <span style="font-weight:400; color: var(--eu-dark-gray);">(check all that apply)</span></label>
+      <div class="purpose-grid" id="purposeGrid">
+        <label class="checkbox-item" id="p-apply"><input type="checkbox" value="Apply a concept or framework to a real situation"><span class="checkbox-check">✓</span> Apply a concept or framework</label>
+        <label class="checkbox-item" id="p-demonstrate"><input type="checkbox" value="Demonstrate a professional skill or competency"><span class="checkbox-check">✓</span> Demonstrate a professional skill</label>
+        <label class="checkbox-item" id="p-critical"><input type="checkbox" value="Develop critical thinking or analytical reasoning"><span class="checkbox-check">✓</span> Develop critical thinking</label>
+        <label class="checkbox-item" id="p-evidence"><input type="checkbox" value="Practice using evidence to support a decision"><span class="checkbox-check">✓</span> Practice evidence-based decisions</label>
+        <label class="checkbox-item" id="p-reflect"><input type="checkbox" value="Reflect on professional experience or values"><span class="checkbox-check">✓</span> Reflect on experience or values</label>
+        <label class="checkbox-item" id="p-collaborate"><input type="checkbox" value="Collaborate or communicate with peers"><span class="checkbox-check">✓</span> Collaborate or communicate</label>
+        <label class="checkbox-item" id="p-synthesize"><input type="checkbox" value="Synthesize knowledge across multiple topics"><span class="checkbox-check">✓</span> Synthesize knowledge</label>
+      </div>
+      <label class="field-label" for="purposeOther">Anything else about what this assignment is designed to do? <span style="font-weight:400; color: var(--eu-dark-gray);">(optional)</span></label>
+      <textarea id="purposeOther" style="min-height: 60px;" placeholder="e.g. help students practice translating QI research into real implementation decisions"></textarea>
+
+      <label class="field-label">Who are the students? <span style="font-weight:400; color: var(--eu-dark-gray);">(check all that apply)</span></label>
+      <div class="checkbox-group" id="studentGrid">
+        <label class="checkbox-item"><input type="checkbox" value="Undergraduate"><span class="checkbox-check">✓</span> Undergraduate</label>
+        <label class="checkbox-item"><input type="checkbox" value="Graduate"><span class="checkbox-check">✓</span> Graduate</label>
+        <label class="checkbox-item"><input type="checkbox" value="Doctoral"><span class="checkbox-check">✓</span> Doctoral</label>
+        <label class="checkbox-item"><input type="checkbox" value="Early in the program"><span class="checkbox-check">✓</span> Early in the program</label>
+        <label class="checkbox-item"><input type="checkbox" value="Middle of the program"><span class="checkbox-check">✓</span> Middle of the program</label>
+        <label class="checkbox-item"><input type="checkbox" value="Near graduation or capstone"><span class="checkbox-check">✓</span> Near graduation or capstone</label>
+      </div>
+    </div>
+
+    <!-- Assignment type -->
+    <div class="section">
+      <div class="section-label"><span class="step">Assignment type</span></div>
+      <div class="section-help">Select the format that best matches what students submit.</div>
+      <div class="type-grid" id="typeGrid"></div>
+    </div>
+
+    <!-- Assignment content -->
+    <div class="section">
+      <div class="section-label"><span class="step">Assignment</span> Prompt, rubric, and competency</div>
+      <div class="section-help">Paste what you have. At minimum, the assignment prompt.</div>
+
+      <label class="field-label" for="assignmentText">Assignment prompt</label>
+      <textarea id="assignmentText" placeholder="Paste the assignment instructions, scenario, and submission requirements as given to students."></textarea>
+
+      <label class="field-label" for="rubricText">Rubric or grading criteria <span style="font-weight:400; color: var(--eu-dark-gray);">(optional)</span></label>
+      <textarea id="rubricText" placeholder="Paste the rubric, grading language, or list of criteria used to evaluate the assignment."></textarea>
+
+      <label class="field-label" for="competencyText">Competency this assignment should demonstrate <span style="font-weight:400; color: var(--eu-dark-gray);">(optional)</span></label>
+      <textarea id="competencyText" style="min-height: 70px;" placeholder="e.g. values-based leadership, financial stewardship, systems thinking"></textarea>
+    </div>
+
+    <!-- Review method -->
+    <div class="section">
+      <div class="section-label"><span class="step">Review method</span></div>
       <div class="section-help">Choose how you want the review run.</div>
-      <div class="type-grid" id="modeGrid">
-        <button type="button" class="type-card" data-mode="apikey">
-          <div class="t-name">Use my own AI account</div>
-          <div class="t-patterns">Enter an API key for Claude, ChatGPT, or Gemini. Runs the review here, in your browser, on your usage.</div>
+      <div class="mode-grid" id="modeGrid">
+        <button type="button" class="mode-card" data-mode="apikey">
+          <div class="m-name">Use my own AI account</div>
+          <div class="m-desc">Enter an API key for Claude, ChatGPT, or Gemini. Runs the review here, in your browser, on your usage.</div>
         </button>
-        <button type="button" class="type-card" data-mode="copy">
-          <div class="t-name">Copy a prompt to use elsewhere</div>
-          <div class="t-patterns">Get a ready-to-paste prompt for any AI tool you already use. Optionally paste the response back for formatted results.</div>
+        <button type="button" class="mode-card" data-mode="copy">
+          <div class="m-name">Copy a prompt to use elsewhere</div>
+          <div class="m-desc">Get a ready-to-paste prompt for any AI tool you already use. Optionally paste the response back for formatted results.</div>
         </button>
       </div>
     </div>
 
-    <!-- API key fields, shown only for apikey mode -->
+    <!-- API key section -->
     <div class="section" id="apiKeySection" style="display:none;">
       <div class="section-label">AI provider and key</div>
-      <div class="section-help">Your key is used only for this review and is not saved or sent anywhere except directly to the provider you choose.</div>
+      <div class="section-help">Your key is used only for this review and is not stored anywhere.</div>
       <div class="type-grid" id="providerGrid">
         <button type="button" class="type-card" data-provider="claude">
           <div class="t-name">Claude (Anthropic)</div>
-          <div class="t-patterns">console.anthropic.com</div>
+          <div style="font-size:0.78rem;color:var(--eu-dark-gray);">console.anthropic.com</div>
         </button>
         <button type="button" class="type-card" data-provider="openai">
           <div class="t-name">ChatGPT (OpenAI)</div>
-          <div class="t-patterns">platform.openai.com</div>
+          <div style="font-size:0.78rem;color:var(--eu-dark-gray);">platform.openai.com</div>
         </button>
         <button type="button" class="type-card" data-provider="gemini">
           <div class="t-name">Gemini (Google)</div>
-          <div class="t-patterns">aistudio.google.com</div>
+          <div style="font-size:0.78rem;color:var(--eu-dark-gray);">aistudio.google.com</div>
         </button>
       </div>
       <label class="field-label" for="apiKeyInput">API key</label>
       <input type="password" id="apiKeyInput" placeholder="Paste your API key here">
     </div>
 
-    <!-- Assignment type -->
-    <div class="section">
-      <div class="section-label"><span class="step">Step 2</span> Assignment type</div>
-      <div class="section-help">Select the format that best matches what students submit.</div>
-      <div class="type-grid" id="typeGrid"></div>
-    </div>
-
-    <!-- Content -->
-    <div class="section">
-      <div class="section-label"><span class="step">Step 3</span> Assignment and rubric</div>
-      <div class="section-help">Paste the assignment prompt as students see it, then the rubric or grading criteria.</div>
-
-      <label class="field-label" for="assignmentText">Assignment prompt</label>
-      <textarea id="assignmentText" placeholder="Paste the assignment instructions, scenario, and submission requirements as given to students."></textarea>
-
-      <label class="field-label" for="rubricText">Rubric or grading criteria</label>
-      <textarea id="rubricText" placeholder="Paste the rubric, grading rubric language, or list of criteria used to evaluate the assignment."></textarea>
-
-      <label class="field-label" for="competencyText">Competency this assignment should demonstrate (optional)</label>
-      <textarea id="competencyText" style="min-height: 70px;" placeholder="E.g. values-based leadership, financial stewardship, systems thinking. Leave blank if not applicable."></textarea>
-    </div>
-
     <div class="submit-row">
       <button class="run-btn" id="runBtn" disabled>Review assignment</button>
-      <span class="run-hint" id="runHint">Select a review method, assignment type, and paste your assignment to begin.</span>
+      <span style="font-size:0.85rem; color:var(--eu-dark-gray);" id="runHint">Select a review method to begin.</span>
     </div>
 
     <div id="loadingBox" class="loading" style="display:none;">
       <div class="spinner"></div>
-      <span id="loadingText">Reviewing assignment against relevant diagnostic questions...</span>
+      <span id="loadingText">Reviewing assignment...</span>
     </div>
 
     <div id="errorBox"></div>
 
-    <!-- Copy-prompt output, shown only in copy mode -->
-    <div class="section" id="copyPromptSection" style="display:none;">
+    <!-- Copy prompt section -->
+    <div class="section" id="copyPromptSection">
       <div class="section-label">Your review prompt</div>
       <div class="section-help">Copy this and paste it into Claude, ChatGPT, Gemini, or any AI tool you use.</div>
-      <textarea id="generatedPrompt" readonly style="min-height: 220px; font-size: 0.85rem;"></textarea>
-      <div style="margin-top: 0.75rem; display:flex; gap: 0.75rem; align-items:center; flex-wrap: wrap;">
+      <textarea id="generatedPrompt" readonly style="min-height: 200px; font-size: 0.85rem;"></textarea>
+      <div style="margin-top: 0.75rem; display:flex; gap: 0.75rem; align-items:center; flex-wrap:wrap;">
         <button class="run-btn" id="copyPromptBtn" style="background: var(--eu-gold);">Copy prompt</button>
-        <span class="run-hint" id="copyHint"></span>
+        <span style="font-size:0.85rem; color:var(--eu-dark-gray);" id="copyHint"></span>
       </div>
-
       <label class="field-label" for="pasteResponseText">Optional: paste the response here to see it formatted as ShowWork cards</label>
-      <textarea id="pasteResponseText" placeholder="Paste your AI tool's full response here, then click Format response. Note: this works best with Claude. If you are using ChatGPT and the cards do not appear, you can read the results directly in ChatGPT by typing 'Make this output reader friendly.'"></textarea>
+      <textarea id="pasteResponseText" placeholder="Paste your AI tool's full response here, then click Format response. Note: formatted ShowWork cards work best with Claude. If you are using ChatGPT and the cards do not appear, type 'Make this output reader friendly' in ChatGPT to get a readable result there."></textarea>
       <div class="submit-row">
         <button class="run-btn" id="formatBtn">Format response</button>
       </div>
@@ -743,12 +843,15 @@
     <!-- Results -->
     <div class="results" id="results">
       <div class="results-header">
-        <div class="eyebrow">Review results</div>
-        <h2 id="resultsTitle">ShowWork review</h2>
-        <div class="meta" id="resultsMeta"></div>
+        <div class="eyebrow">ShowWork review</div>
+        <h2 id="resultsTitle">Assignment review</h2>
+        <div style="font-size:0.88rem; color:var(--eu-dark-gray); margin-top:0.5rem;" id="resultsMeta"></div>
       </div>
+      <div id="disclaimerBox"></div>
       <div class="summary-box" id="summaryBox"></div>
-      <div id="patternList"></div>
+      <div id="strengthsSection"></div>
+      <div id="opportunitiesSection"></div>
+      <div class="rerun-note" id="rerunNote"></div>
       <div class="save-row">
         <button class="save-btn download" id="downloadBtn">&#8681; Download as report</button>
         <button class="save-btn copy-text" id="copyTextBtn">&#9670; Copy as plain text</button>
@@ -766,43 +869,60 @@
       <a href="https://www.edgewood.edu" target="_blank" rel="noopener">edgewood.edu</a><br>
       Created by Tamala S. Bradham, PhD, DHA
     </p>
+    <p style="margin-top: 0.75rem; font-style: italic;">
+      ShowWork was based on the work by Jean Gordon, Eric Richardson, Dawn Oetjen, Reid Oetjen, and Nikki Strawn, from the AUPHA Art of Teaching Institute course &ldquo;Future Fluent by Design: Reimagining Assessments for the Age of AI&rdquo; (Medical University of South Carolina and University of Central Florida).
+    </p>
   </footer>
 </div>
 
 <script>
+const DOMAINS = {
+  D1: { label: "Domain 1: Student's own context and judgment", color: "d1" },
+  D2: { label: "Domain 2: Visible thinking", color: "d2" },
+  D3: { label: "Domain 3: Doing something with knowledge", color: "d3" }
+};
+
 const PATTERNS = {
-  "01": { name: "Generic context", gloss: "Could be answered without knowing anything about your organization, region, or students.", question: "Could AI answer this prompt without any organization-specific, region-specific, or population-specific knowledge?" },
-  "02": { name: "Product-only deliverables", gloss: "Students submit a final product, but not how they got there.", question: "Is the student's reasoning visible in what they submit, or only their conclusions?" },
-  "03": { name: "Predictable prompts", gloss: "A fill-in-the-blank structure that AI navigates as well as or better than a student.", question: "Does the structure of the assignment make it easier for AI to produce a strong response than for a developing student?" },
-  "04": { name: "Absent rationale requirements", gloss: "Students aren't asked to explain why they made the choices they did.", question: "Is the student required to justify choices and explain what alternatives were rejected?" },
-  "05": { name: "Competency-deliverable mismatch", gloss: "What students submit doesn't actually show the skill the assignment claims to measure.", question: "Does what the student submits actually demonstrate the competency you claim it demonstrates?" },
-  "06": { name: "Static scenarios", gloss: "The situation never changes, so students never have to adapt.", question: "Does the assignment require the student to adapt to new or unexpected information?" },
-  "07": { name: "Single-submission snapshot", gloss: "Only the final draft is seen; how the thinking developed is invisible.", question: "Does the assignment reveal how the student's thinking developed over time, or only what they produced at the end?" },
-  "08": { name: "Verifiable-answer bias", gloss: "There's a 'right' answer that exists independent of the student's own reasoning.", question: "Could a correct answer exist independent of this particular student's reasoning process?" },
-  "09": { name: "Decontextualized data", gloss: "All the information is handed over clean, with nothing missing or in conflict to sort through.", question: "Does the student have to identify what information is missing, unreliable, or in conflict before they can act?" },
-  "10": { name: "Detachment from personal experience", gloss: "Nothing about the prompt draws on what this particular student has seen or done.", question: "Does this assignment require something only this student, with this background, could meaningfully contribute?" },
-  "11": { name: "Over-reliance on recall or summary", gloss: "The task is mainly to locate and report information, not do anything with it.", question: "Does the assignment ask the student to do something with the information beyond locating and reporting it?" }
+  "D1P1": { domain: "D1", name: "Generic context", gloss: "Does this assignment ask students to bring their own organizational context, or could anyone answer it from generic knowledge?" },
+  "D1P2": { domain: "D1", name: "Decontextualized data", gloss: "Does this assignment require students to evaluate what information is missing, uncertain, or in conflict?" },
+  "D1P3": { domain: "D1", name: "Detachment from personal experience", gloss: "Does this assignment draw on what this particular student has seen, done, or lived — something only they can supply?" },
+  "D2P1": { domain: "D2", name: "Visible thinking", gloss: "Does this assignment make the student's reasoning process visible, not just their final product?" },
+  "D2P2": { domain: "D2", name: "Absent rationale requirements", gloss: "Does this assignment require students to justify their choices and explain what alternatives they considered?" },
+  "D2P3": { domain: "D2", name: "AI use transparency", gloss: "Does this assignment ask students to document how they used AI, at what stages, and what they contributed themselves?" },
+  "D3P1": { domain: "D3", name: "Assignment specificity", gloss: "Is this assignment specific and adaptive enough that students must engage with this particular situation, not a generic one?" },
+  "D3P2": { domain: "D3", name: "Competency-deliverable mismatch", gloss: "Do the deliverables actually require students to demonstrate the competencies the assignment claims to assess?" },
+  "D3P3": { domain: "D3", name: "Over-reliance on recall or summary", gloss: "Does this assignment ask students to do something with the knowledge — apply, evaluate, create — rather than just locate and report it?" }
 };
 
 const ASSIGNMENT_TYPES = [
-  { id: "case_study", name: "Case study analysis", patterns: ["01","04","09","05"] },
-  { id: "reflection", name: "Reflection paper", patterns: ["10","02","08"] },
-  { id: "strategic_plan", name: "Strategic plan or proposal", patterns: ["03","06","05","04"] },
-  { id: "discussion", name: "Discussion post", patterns: ["01","11","10"] },
-  { id: "simulation", name: "Simulation or role-play", patterns: ["06","07"] },
-  { id: "presentation", name: "Presentation or final report", patterns: ["02","04","05"] }
+  { id: "case_study", name: "Case study analysis" },
+  { id: "reflection", name: "Reflection paper" },
+  { id: "strategic_plan", name: "Strategic plan or proposal" },
+  { id: "discussion", name: "Discussion post" },
+  { id: "simulation", name: "Simulation or role-play" },
+  { id: "presentation", name: "Presentation or final report" }
 ];
+
+const FIELD_DESCRIPTIONS = {
+  purpose: "assignment purpose",
+  students: "student level and program placement",
+  type: "assignment type",
+  assignment: "assignment prompt",
+  rubric: "rubric or grading criteria",
+  competency: "competency"
+};
 
 let selectedType = null;
 let selectedMode = null;
 let selectedProvider = null;
 
+// Build type grid
 const typeGrid = document.getElementById('typeGrid');
 ASSIGNMENT_TYPES.forEach(t => {
   const card = document.createElement('button');
   card.className = 'type-card';
   card.type = 'button';
-  card.innerHTML = `<div class="t-name">${t.name}</div><div class="t-patterns">Patterns ${t.patterns.join(', ')}</div>`;
+  card.innerHTML = `<div class="t-name">${t.name}</div>`;
   card.addEventListener('click', () => {
     document.querySelectorAll('#typeGrid .type-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
@@ -812,9 +932,19 @@ ASSIGNMENT_TYPES.forEach(t => {
   typeGrid.appendChild(card);
 });
 
-document.querySelectorAll('#modeGrid .type-card').forEach(card => {
+// Checkbox interactions
+document.querySelectorAll('.checkbox-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const cb = item.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    item.classList.toggle('checked', cb.checked);
+  });
+});
+
+// Mode selection
+document.querySelectorAll('#modeGrid .mode-card').forEach(card => {
   card.addEventListener('click', () => {
-    document.querySelectorAll('#modeGrid .type-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('#modeGrid .mode-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     selectedMode = card.dataset.mode;
     document.getElementById('apiKeySection').style.display = selectedMode === 'apikey' ? 'block' : 'none';
@@ -825,6 +955,7 @@ document.querySelectorAll('#modeGrid .type-card').forEach(card => {
   });
 });
 
+// Provider selection
 document.querySelectorAll('#providerGrid .type-card').forEach(card => {
   card.addEventListener('click', () => {
     document.querySelectorAll('#providerGrid .type-card').forEach(c => c.classList.remove('selected'));
@@ -835,228 +966,157 @@ document.querySelectorAll('#providerGrid .type-card').forEach(card => {
 });
 
 const assignmentText = document.getElementById('assignmentText');
-const rubricText = document.getElementById('rubricText');
-const competencyText = document.getElementById('competencyText');
 const apiKeyInput = document.getElementById('apiKeyInput');
 const runBtn = document.getElementById('runBtn');
 const runHint = document.getElementById('runHint');
 
 function updateRunState() {
-  const hasType = !!selectedType;
   const hasAssignment = assignmentText.value.trim().length > 20;
   const hasMode = !!selectedMode;
+  const hasType = !!selectedType;
   let hasProviderInfo = true;
   if (selectedMode === 'apikey') {
     hasProviderInfo = !!selectedProvider && apiKeyInput.value.trim().length > 0;
   }
 
-  if (hasMode && hasType && hasAssignment && hasProviderInfo) {
+  if (hasMode && hasAssignment) {
     runBtn.disabled = false;
     runHint.textContent = selectedMode === 'copy' ? 'Ready to generate your prompt.' : 'Ready to review.';
   } else {
     runBtn.disabled = true;
     if (!hasMode) runHint.textContent = 'Select a review method to begin.';
-    else if (!hasType) runHint.textContent = 'Select an assignment type.';
     else if (!hasAssignment) runHint.textContent = 'Paste your assignment prompt to continue.';
-    else if (!hasProviderInfo) runHint.textContent = 'Select an AI provider and enter your API key.';
   }
 }
 
 assignmentText.addEventListener('input', updateRunState);
 apiKeyInput.addEventListener('input', updateRunState);
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  document.getElementById('results').classList.remove('visible');
-  document.getElementById('errorBox').innerHTML = '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-document.getElementById('downloadBtn').addEventListener('click', () => {
-  const title = document.getElementById('resultsTitle').textContent;
-  const meta = document.getElementById('resultsMeta').textContent;
-  const summary = document.getElementById('summaryBox').textContent;
-  const cards = document.getElementById('patternList').querySelectorAll('.pattern-card');
-
-  const statusLabels = { 'Worth revising': '#BB0000', 'Partial': '#C8932B', 'Holding up': '#639922' };
-
-  let cardsHtml = '';
-  cards.forEach(card => {
-    const name = card.querySelector('.pattern-name')?.textContent || '';
-    const gloss = card.querySelector('.pattern-gloss')?.textContent || '';
-    const score = card.querySelector('.pattern-score')?.textContent || '';
-    const status = card.querySelector('.pattern-status')?.textContent || '';
-    const sections = card.querySelectorAll('.pattern-section');
-    let sectionsHtml = '';
-    sections.forEach(sec => {
-      const label = sec.querySelector('.label')?.textContent || '';
-      const items = sec.querySelectorAll('li');
-      let content = '';
-      if (items.length > 0) {
-        content = '<ul style="margin:0.3rem 0 0 1.2rem; padding:0;">' + Array.from(items).map(li => `<li style="margin-bottom:4px;">${li.textContent}</li>`).join('') + '</ul>';
-      } else {
-        content = `<p style="margin:0.3rem 0 0;">${sec.querySelector('div:not(.label)')?.textContent || ''}</p>`;
-      }
-      sectionsHtml += `<div style="margin-bottom:0.9rem; padding-bottom:0.75rem; border-bottom:1px solid #E2DED6;"><div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5794AD;margin-bottom:0.3rem;">${label}</div>${content}</div>`;
-    });
-
-    const color = status === 'Worth revising' ? '#BB0000' : status === 'Partial' ? '#C8932B' : '#639922';
-    cardsHtml += `
-      <div style="background:#fff;border-radius:10px;border-left:4px solid ${color};box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:1rem;overflow:hidden;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:1rem 1.25rem 0.5rem;gap:1rem;">
-          <div>
-            <div style="font-weight:600;font-size:15px;">${name}</div>
-            <div style="font-size:13px;color:#6D6E71;">${gloss}</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;">
-            <div style="font-size:12px;color:#6D6E71;">${score}</div>
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border-radius:4px;background:${color}22;color:${color};margin-top:3px;">${status}</div>
-          </div>
-        </div>
-        <div style="padding:0 1.25rem 1.25rem;">${sectionsHtml}</div>
-      </div>`;
+// Collapsible sections
+document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    const targetId = trigger.dataset.target;
+    const body = document.getElementById(targetId);
+    const icon = trigger.querySelector('.collapsible-icon');
+    const isCollapsed = body.classList.contains('collapsed');
+    body.classList.toggle('collapsed', !isCollapsed);
+    icon.innerHTML = isCollapsed ? '&#8722;' : '+';
   });
-
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>${title}</title>
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  body { font-family: 'Source Sans 3', sans-serif; background: #F8F6F3; color: #1a1a1a; margin: 0; padding: 2rem; line-height: 1.6; }
-  .page { max-width: 780px; margin: 0 auto; }
-  .header { border-bottom: 3px solid #BB0000; padding-bottom: 1rem; margin-bottom: 1.5rem; }
-  .header h1 { font-size: 1.4rem; font-weight: 600; margin: 0 0 0.25rem; }
-  .header .meta { font-size: 0.85rem; color: #6D6E71; }
-  .summary { background: #fff; border-left: 4px solid #C8932B; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.7; }
-  .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #C2C6C8; font-size: 0.78rem; color: #6D6E71; text-align: center; }
-  @media print { body { background: white; padding: 0; } }
-</style>
-</head>
-<body>
-<div class="page">
-  <div class="header">
-    <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#C8932B;margin-bottom:0.4rem;">ShowWork · Edgewood University</div>
-    <h1>${title}</h1>
-    <div class="meta">${meta}</div>
-  </div>
-  <div class="summary">${summary}</div>
-  ${cardsHtml}
-  <div class="footer">&copy; 2026 Edgewood University &middot; Henry Predolin College of Health Sciences &middot; Created by Tamala S. Bradham, PhD, DHA</div>
-</div>
-</body>
-</html>`;
-
-  const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `ShowWork-review-${Date.now()}.html`;
-  a.click();
-  URL.revokeObjectURL(url);
 });
 
-document.getElementById('copyTextBtn').addEventListener('click', async () => {
-  const title = document.getElementById('resultsTitle').textContent;
-  const meta = document.getElementById('resultsMeta').textContent;
-  const summary = document.getElementById('summaryBox').textContent;
-  const cards = document.getElementById('patternList').querySelectorAll('.pattern-card');
-
-  let text = `${title}\n${meta}\n\n`;
-  text += `SUMMARY\n${summary}\n\n`;
-  text += '─'.repeat(60) + '\n\n';
-
-  cards.forEach(card => {
-    const name = card.querySelector('.pattern-name')?.textContent || '';
-    const score = card.querySelector('.pattern-score')?.textContent || '';
-    const status = card.querySelector('.pattern-status')?.textContent || '';
-    text += `${name}  |  ${score}  |  ${status}\n`;
-
-    const sections = card.querySelectorAll('.pattern-section');
-    sections.forEach(sec => {
-      const label = sec.querySelector('.label')?.textContent || '';
-      const items = sec.querySelectorAll('li');
-      text += `\n${label}\n`;
-      if (items.length > 0) {
-        items.forEach(li => { text += `  • ${li.textContent}\n`; });
-      } else {
-        text += `${sec.querySelector('div:not(.label)')?.textContent?.trim() || ''}\n`;
-      }
-    });
-    text += '\n' + '─'.repeat(60) + '\n\n';
-  });
-
-  text += '© 2026 Edgewood University · Henry Predolin College of Health Sciences · Created by Tamala S. Bradham, PhD, DHA';
-
-  try {
-    await navigator.clipboard.writeText(text);
-    const btn = document.getElementById('copyTextBtn');
-    const orig = btn.textContent;
-    btn.textContent = 'Copied!';
-    setTimeout(() => { btn.textContent = orig; }, 2000);
-  } catch (e) {
-    alert('Could not copy automatically. Please select the results and copy manually.');
-  }
-});
-
-runBtn.addEventListener('click', () => {
-  if (selectedMode === 'copy') {
-    generatePrompt();
-  } else {
-    runReview();
-  }
-});
-
-function buildPrompts() {
-  const patternsToCheck = selectedType.patterns.map(id => `${id}. ${PATTERNS[id].name} -- Diagnostic question: ${PATTERNS[id].question}`).join('\n');
-
-  const systemPrompt = `You are reviewing a graduate-level healthcare administration assignment for vulnerability to AI shortcuts, meaning ways a student could produce a strong-looking submission using AI without demonstrating the reasoning, judgment, or competency the assignment is meant to assess.
-
-You will be given an assignment prompt, a rubric, an optional target competency, and a fixed list of diagnostic patterns relevant to this assignment type. For EACH pattern in the list, assess the assignment against its diagnostic question.
-
-Respond ONLY with valid JSON, no markdown fences, no preamble, in this exact structure:
-{
-  "summary": "2-3 sentence overall summary of how vulnerable this assignment is to AI shortcuts and the single highest-leverage change the instructor could make. Written in second person, plain and direct, no jargon.",
-  "patterns": [
-    {
-      "id": "01",
-      "status": "high" | "moderate" | "low",
-      "score": 1 | 2 | 3,
-      "vulnerability": "1-2 sentences in plain language describing specifically, using language from THIS assignment, where it is or is not vulnerable on this pattern. Be concrete, reference actual elements of the prompt or rubric.",
-      "why_it_matters": "1-2 sentences in plain language explaining why this gap matters for what the assignment is supposed to measure.",
-      "how_to_address": ["2-3 short, concrete bullet-point options the instructor could consider, in plain language, each a different way to address the gap. If status is low, this can be a short note on what to preserve."],
-      "brainstorm_prompt": "A self-contained prompt, written in first person as if the instructor is writing it, that the instructor could copy and paste into any AI tool to brainstorm revisions. It should summarize this specific finding (the pattern, the vulnerability, and why it matters) and ask the AI for 2-3 ways to revise the assignment to address it, while preserving the learning goal. It must NOT ask the instructor to paste their assignment, since it should work standalone.",
-      "check_prompt": "A self-contained prompt, written in first person as if the instructor is writing it, that the instructor could copy and paste into any AI tool AFTER revising their assignment, to check whether the revision actually addressed this specific gap. It should restate the original concern in plain language, then ask the AI to review the revised assignment (which the instructor will paste in) and say whether the gap is closed or what still needs work. Include a placeholder like [paste your revised assignment here]."
-    }
-  ]
+// Get selected checkboxes
+function getChecked(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`))
+    .map(cb => cb.value);
 }
 
-status and score meanings (score must match status):
-- "high" / score 1: this pattern represents a significant AI vulnerability in this assignment as currently written
-- "moderate" / score 2: some vulnerability exists but it is partial or easily mitigated
-- "low" / score 3: the assignment already handles this pattern well
+// Build missing fields disclaimer
+function buildDisclaimer() {
+  const missing = [];
+  const purposes = getChecked('purposeGrid');
+  const students = getChecked('studentGrid');
+  if (purposes.length === 0 && !document.getElementById('purposeOther').value.trim()) missing.push('assignment purpose');
+  if (students.length === 0) missing.push('student level and program placement');
+  if (!selectedType) missing.push('assignment type');
+  if (!document.getElementById('rubricText').value.trim()) missing.push('rubric or grading criteria');
+  if (!document.getElementById('competencyText').value.trim()) missing.push('competency');
+  return missing;
+}
 
-Include exactly one object in "patterns" for each pattern ID given, in the order given. Be specific and grounded in the actual text provided. Do not be generic. Avoid jargon in vulnerability, why_it_matters, and how_to_address; write as if explaining to a colleague who has not taken any specific training.`;
+function buildSystemPrompt() {
+  const patternList = Object.entries(PATTERNS).map(([code, p]) =>
+    `${code} (${DOMAINS[p.domain].label.split(':')[0]}): ${p.name} — ${p.gloss}`
+  ).join('\n');
 
-  const userContent = `Assignment type: ${selectedType.name}
+  return `You are ShowWork, an AI review tool designed to help healthcare administration faculty design assignments that support responsible AI use by students.
 
-Diagnostic patterns to assess:
-${patternsToCheck}
+Your job is NOT to identify vulnerabilities or suggest AI-proofing. Your job is to help faculty see where their assignment already supports responsible AI use and where one targeted change could strengthen it further. Frame everything as an opportunity to improve, never as a flaw.
 
-ASSIGNMENT PROMPT:
-${assignmentText.value.trim()}
+You will assess the assignment against nine diagnostic patterns organized into three domains:
 
-RUBRIC OR GRADING CRITERIA:
-${rubricText.value.trim() || '(none provided)'}
+${patternList}
 
-TARGET COMPETENCY:
-${competencyText.value.trim() || '(none specified)'}`;
+SCORING:
+Score each pattern 1-3:
+- 3 = This assignment already handles this well. Students using AI responsibly would still need to demonstrate this.
+- 2 = Some evidence of this, but room to strengthen.
+- 1 = This is an opportunity worth addressing.
 
-  return { systemPrompt, userContent };
+Total possible score: 27. Report the total and a band:
+- 22-27 (80%+): Strong foundation for responsible AI use
+- 14-21 (50-79%): Developing — meaningful opportunities to strengthen
+- Below 14: Worth a focused redesign conversation
+
+OUTPUT STRUCTURE — respond ONLY with valid JSON, no markdown fences, no preamble:
+{
+  "title": "short descriptive title for this review based on assignment type and purpose",
+  "summary": "2-3 sentences. Warm, specific, direct. Name what the assignment is trying to accomplish, acknowledge its strongest design elements, and name the highest-leverage opportunity across all domains. Weave in the score and band naturally — e.g. 'With a score of 19 out of 27, this assignment is in the Developing range...' Written in second person.",
+  "total_score": 0,
+  "band": "Strong foundation | Developing | Worth a focused redesign conversation",
+  "strengths": [
+    {
+      "code": "D1P1",
+      "pattern": "pattern name",
+      "domain": "D1",
+      "score": 3,
+      "body": "2-3 sentences. Warm and specific. Name exactly what the assignment does that supports responsible AI use on this pattern. Tell faculty what to preserve and why it matters. Do not use the word vulnerable."
+    }
+  ],
+  "opportunities": [
+    {
+      "code": "D1P1",
+      "pattern": "pattern name",
+      "domain": "D1",
+      "score": 1,
+      "flag": "additive | structural",
+      "what_it_does_well": "1 sentence on what the assignment already does on this pattern, if anything.",
+      "opportunity": "1-2 sentences naming specifically what is missing or could be strengthened, using language from the actual assignment.",
+      "suggestions": ["2-3 short bullet options, each a concrete change the instructor could make. Plain language. Each one different in approach."],
+      "brainstorm_prompt": "Self-contained prompt written in first person as if the instructor is writing it. States the assignment purpose, names this specific pattern and what ShowWork found, and asks for 2-3 ways to strengthen the assignment for responsible AI use. Does NOT ask faculty to paste their assignment.",
+      "check_prompt": "Self-contained prompt written in first person. Restates the original concern in plain language, asks the AI to review the revised assignment and confirm whether the opportunity has been addressed. Includes [paste your revised assignment here]."
+    }
+  ],
+  "rerun_note": "A warm, plain-language note (2-3 sentences) explaining that ShowWork surfaces the highest-leverage opportunity in each domain, and that running the assignment again after revising may surface a different opportunity. Frame iteration as normal and valuable, not as a limitation."
+}
+
+RULES:
+1. Include EXACTLY ONE strength entry for the highest-scoring pattern overall (score 3 preferred, or highest available). If two patterns genuinely tie at the top, include both. Never include more than two strengths.
+2. Include EXACTLY ONE opportunity per domain (three total) — the pattern in that domain where a single targeted change would have the most downstream effect.
+3. flag must be "additive" if the change adds something to the existing assignment without restructuring it, or "structural" if it requires redesigning something.
+4. Never use the words: vulnerable, vulnerability, AI-proof, cheat, flag, or risk.
+5. Write as a thoughtful colleague who respects the faculty member's design work. Celebrate what's working. Be specific — reference actual language from the assignment.
+6. If the assignment is minimal (prompt only, no rubric or competency), acknowledge in the summary that findings are based on limited context and may be refined with more information.
+7. Consider the program level and placement context when calibrating findings — a capstone student should be held to a higher bar for demonstrating competency than a first-semester student.
+8. AI use transparency (D2P3) is always worth assessing — even if the assignment seems strong, the absence of explicit AI use documentation is worth naming as an additive opportunity.`;
+}
+
+function buildUserContent() {
+  const purposes = getChecked('purposeGrid');
+  const purposeOther = document.getElementById('purposeOther').value.trim();
+  const students = getChecked('studentGrid');
+  const assignment = assignmentText.value.trim();
+  const rubric = document.getElementById('rubricText').value.trim();
+  const competency = document.getElementById('competencyText').value.trim();
+
+  let content = '';
+  if (purposes.length > 0 || purposeOther) {
+    content += `ASSIGNMENT PURPOSE:\n${[...purposes, purposeOther].filter(Boolean).join('; ')}\n\n`;
+  }
+  if (students.length > 0) {
+    content += `STUDENT CONTEXT:\n${students.join(', ')}\n\n`;
+  }
+  if (selectedType) {
+    content += `ASSIGNMENT TYPE:\n${selectedType.name}\n\n`;
+  }
+  content += `ASSIGNMENT PROMPT:\n${assignment}\n\n`;
+  content += `RUBRIC OR GRADING CRITERIA:\n${rubric || '(not provided)'}\n\n`;
+  content += `COMPETENCY:\n${competency || '(not provided)'}`;
+  return content;
 }
 
 function generatePrompt() {
-  const { systemPrompt, userContent } = buildPrompts();
+  const systemPrompt = buildSystemPrompt();
+  const userContent = buildUserContent();
   const jsonInstruction = `IMPORTANT: Return your response as structured data only — a single valid JSON object with no introduction, explanation, or text before or after it. Do not wrap it in code fences. The output will be parsed directly by a program and any text outside the data structure will cause an error.\n\n`;
   const combined = `${jsonInstruction}${systemPrompt}\n\n---\n\n${userContent}`;
   document.getElementById('generatedPrompt').value = combined;
@@ -1072,7 +1132,7 @@ document.getElementById('copyPromptBtn').addEventListener('click', async () => {
     document.getElementById('copyHint').textContent = 'Copied. Paste it into your AI tool of choice.';
   } catch (e) {
     document.getElementById('generatedPrompt').select();
-    document.getElementById('copyHint').textContent = 'Select all and copy manually (clipboard access was blocked).';
+    document.getElementById('copyHint').textContent = 'Select all and copy manually.';
   }
 });
 
@@ -1086,68 +1146,49 @@ document.getElementById('formatBtn').addEventListener('click', () => {
   }
   const parsed = extractJson(raw);
   if (!parsed) {
-    errorBox.innerHTML = `<div class="error-box">The response could not be formatted as ShowWork cards. If you are using ChatGPT, type <em>"Make this output reader friendly"</em> in ChatGPT and read the results there. The formatted cards work best when using Claude directly in ShowWork.</div>`;
+    errorBox.innerHTML = `<div class="error-box">The response could not be formatted as ShowWork cards. If you are using ChatGPT, type <em>"Make this output reader friendly"</em> in ChatGPT and read the results there. Formatted cards work best when using Claude directly in ShowWork.</div>`;
     return;
   }
   renderResults(parsed);
 });
 
-// Extracts a JSON object from text that may include surrounding commentary,
-// code fences, or wrapper lines like "Claude responded:" or "Pasted text.txt Document".
 function extractJson(raw) {
   let text = raw.trim();
-
-  // Strip code fences with or without language tag
   text = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '');
-
-  // Strip common ChatGPT/Claude wrapper phrases at the start
   text = text.replace(/^(here is|here's|below is|the following is|formatted results?:?|claude responded:?|result:?)\s*/i, '');
-
-  // Try parsing as-is first
   try { return JSON.parse(text.trim()); } catch (e) {}
-
-  // Find the outermost { ... } block — handle nested braces
   let depth = 0, start = -1, end = -1;
   for (let i = 0; i < text.length; i++) {
-    if (text[i] === '{') {
-      if (depth === 0) start = i;
-      depth++;
-    } else if (text[i] === '}') {
-      depth--;
-      if (depth === 0 && start !== -1) { end = i; break; }
-    }
+    if (text[i] === '{') { if (depth === 0) start = i; depth++; }
+    else if (text[i] === '}') { depth--; if (depth === 0 && start !== -1) { end = i; break; } }
   }
-
-  if (start !== -1 && end !== -1) {
-    try { return JSON.parse(text.slice(start, end + 1)); } catch (e) {}
-  }
-
-  // Last resort: find first { to last }
+  if (start !== -1 && end !== -1) { try { return JSON.parse(text.slice(start, end + 1)); } catch (e) {} }
   const s = text.indexOf('{');
   const e2 = text.lastIndexOf('}');
-  if (s !== -1 && e2 > s) {
-    try { return JSON.parse(text.slice(s, e2 + 1)); } catch (e) {}
-  }
-
+  if (s !== -1 && e2 > s) { try { return JSON.parse(text.slice(s, e2 + 1)); } catch (e) {} }
   return null;
 }
+
+document.getElementById('runBtn').addEventListener('click', () => {
+  if (selectedMode === 'copy') generatePrompt();
+  else runReview();
+});
 
 async function runReview() {
   const errorBox = document.getElementById('errorBox');
   const loadingBox = document.getElementById('loadingBox');
   const results = document.getElementById('results');
-
   errorBox.innerHTML = '';
   results.classList.remove('visible');
   loadingBox.style.display = 'flex';
   runBtn.disabled = true;
 
-  const { systemPrompt, userContent } = buildPrompts();
+  const systemPrompt = buildSystemPrompt();
+  const userContent = buildUserContent();
   const key = apiKeyInput.value.trim();
 
   try {
     let parsed;
-
     if (selectedProvider === 'claude') {
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
@@ -1159,7 +1200,7 @@ async function runReview() {
         },
         body: JSON.stringify({
           model: "claude-sonnet-4-6",
-          max_tokens: 2500,
+          max_tokens: 3000,
           system: systemPrompt,
           messages: [{ role: "user", content: userContent }]
         })
@@ -1169,49 +1210,38 @@ async function runReview() {
       const textBlock = data.content.find(b => b.type === 'text');
       if (!textBlock) throw new Error('No response received.');
       parsed = extractJson(textBlock.text);
-      if (!parsed) throw new Error('Could not read the response as JSON.');
-
+      if (!parsed) throw new Error('Could not read the response.');
     } else if (selectedProvider === 'openai') {
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${key}`
-        },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
         body: JSON.stringify({
           model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userContent }
-          ]
+          messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userContent }]
         })
       });
       if (!response.ok) throw new Error(`Request failed (${response.status}). Check your API key.`);
       const data = await response.json();
-      const text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      const text = data.choices?.[0]?.message?.content;
       if (!text) throw new Error('No response received.');
       parsed = extractJson(text);
-      if (!parsed) throw new Error('Could not read the response as JSON.');
-
+      if (!parsed) throw new Error('Could not read the response.');
     } else if (selectedProvider === 'gemini') {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: systemPrompt + "\n\n---\n\n" + userContent }] }]
-        })
+        body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt + "\n\n---\n\n" + userContent }] }] })
       });
       if (!response.ok) throw new Error(`Request failed (${response.status}). Check your API key.`);
       const data = await response.json();
-      const text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!text) throw new Error('No response received.');
       parsed = extractJson(text);
-      if (!parsed) throw new Error('Could not read the response as JSON.');
+      if (!parsed) throw new Error('Could not read the response.');
     }
-
     renderResults(parsed);
   } catch (err) {
-    errorBox.innerHTML = `<div class="error-box">The review could not be completed (${err.message}).</div>`;
+    errorBox.innerHTML = `<div class="error-box">The review could not be completed: ${err.message}</div>`;
   } finally {
     loadingBox.style.display = 'none';
     runBtn.disabled = false;
@@ -1225,119 +1255,214 @@ function escapeHtml(str) {
 }
 
 function renderResults(parsed) {
-  document.getElementById('resultsTitle').textContent = `${selectedType ? selectedType.name + ': ' : ''}ShowWork review`;
+  // Title and score meta
+  document.getElementById('resultsTitle').textContent = parsed.title || (selectedType ? selectedType.name + ': ShowWork review' : 'ShowWork review');
+  if (parsed.total_score !== undefined && parsed.band) {
+    document.getElementById('resultsMeta').textContent = `Score: ${parsed.total_score} / 27 · ${parsed.band}`;
+  } else {
+    document.getElementById('resultsMeta').textContent = '';
+  }
 
-  const totalPatterns = parsed.patterns.length;
-  const maxScore = totalPatterns * 3;
-  const totalScore = parsed.patterns.reduce((sum, p) => sum + (Number(p.score) || 0), 0);
-  const pct = maxScore > 0 ? totalScore / maxScore : 0;
+  // Disclaimer
+  const missing = buildDisclaimer();
+  const disclaimerBox = document.getElementById('disclaimerBox');
+  if (missing.length > 0) {
+    const missingStr = missing.join(', ');
+    disclaimerBox.innerHTML = `<div class="disclaimer-box"><strong>Note:</strong> This review was completed without the following: ${missingStr}. Adding these will give ShowWork more context and may sharpen or change the findings.</div>`;
+  } else {
+    disclaimerBox.innerHTML = '';
+  }
 
-  let band, bandDesc;
-  if (pct >= 0.8) { band = 'AI resilient'; bandDesc = 'most checked patterns are holding up well'; }
-  else if (pct >= 0.5) { band = 'Developing'; bandDesc = 'a mix of strengths and gaps across checked patterns'; }
-  else { band = 'Worth a closer look'; bandDesc = 'several checked patterns may need revision'; }
-
-  document.getElementById('resultsMeta').textContent =
-    `${totalPatterns} diagnostic patterns assessed \u00B7 Score: ${totalScore} / ${maxScore} \u00B7 ${band} (${bandDesc})`;
-
+  // Summary
   document.getElementById('summaryBox').textContent = parsed.summary || '';
 
-  const list = document.getElementById('patternList');
-  list.innerHTML = '';
+  // Strengths
+  const strengthsSection = document.getElementById('strengthsSection');
+  if (parsed.strengths && parsed.strengths.length > 0) {
+    let html = `<div class="strengths-header">Where you&rsquo;re doing incredible work</div>`;
+    parsed.strengths.forEach(s => {
+      const domain = DOMAINS[s.domain] || { label: '' };
+      html += `
+        <div class="strength-card">
+          <div class="s-code">${escapeHtml(s.code)} &middot; ${escapeHtml(domain.label.split(':')[0])}</div>
+          <div class="s-pattern">${escapeHtml(s.pattern)}</div>
+          <div class="s-body">${escapeHtml(s.body)}</div>
+        </div>`;
+    });
+    strengthsSection.innerHTML = html;
+  } else {
+    strengthsSection.innerHTML = '';
+  }
 
-  const statusLabels = { high: 'Worth revising', moderate: 'Partial', low: 'Holding up' };
+  // Opportunities by domain
+  const oppsSection = document.getElementById('opportunitiesSection');
+  if (parsed.opportunities && parsed.opportunities.length > 0) {
+    let html = '';
+    parsed.opportunities.forEach(opp => {
+      const domain = DOMAINS[opp.domain] || { label: 'Domain', color: 'd1' };
+      const domainLabel = domain.label;
+      const domainColor = domain.color;
+      const flagLabel = opp.flag === 'additive' ? 'Additive change' : 'Structural change';
+      const flagClass = opp.flag === 'additive' ? 'flag-additive' : 'flag-structural';
 
-  parsed.patterns.forEach(p => {
-    const meta = PATTERNS[p.id] || { name: 'Pattern ' + p.id, gloss: '' };
-    const card = document.createElement('div');
-    card.className = `pattern-card flag-${p.status || 'moderate'}`;
+      const suggItems = Array.isArray(opp.suggestions) ? opp.suggestions.map(s => `<li>${escapeHtml(s)}</li>`).join('') : '';
 
-    const scoreLabel = p.score ? `${p.score} / 3` : '';
-
-    const addressItems = Array.isArray(p.how_to_address) ? p.how_to_address : (p.how_to_address ? [p.how_to_address] : []);
-    const addressHtml = addressItems.map(item => `<li>${escapeHtml(item)}</li>`).join('');
-
-    let promptsHtml = '';
-    if (p.brainstorm_prompt || p.check_prompt) {
-      promptsHtml += '<div class="prompt-group">';
-      if (p.brainstorm_prompt) {
-        promptsHtml += `
-          <details class="prompt-accordion">
-            <summary>Brainstorm prompt</summary>
-            <p class="prompt-text">${escapeHtml(p.brainstorm_prompt)}</p>
-            <button class="copy-prompt-btn" type="button">Copy prompt</button>
-          </details>`;
+      let promptsHtml = '';
+      if (opp.brainstorm_prompt || opp.check_prompt) {
+        promptsHtml = '<div class="prompt-group">';
+        if (opp.brainstorm_prompt) {
+          promptsHtml += `<details class="prompt-accordion"><summary>Brainstorm prompt</summary><p class="prompt-text">${escapeHtml(opp.brainstorm_prompt)}</p><button class="copy-prompt-btn" type="button">Copy prompt</button></details>`;
+        }
+        if (opp.check_prompt) {
+          promptsHtml += `<details class="prompt-accordion"><summary>Check my revision prompt</summary><p class="prompt-text">${escapeHtml(opp.check_prompt)}</p><button class="copy-prompt-btn" type="button">Copy prompt</button></details>`;
+        }
+        promptsHtml += '</div>';
       }
-      if (p.check_prompt) {
-        promptsHtml += `
-          <details class="prompt-accordion">
-            <summary>Check my revision prompt</summary>
-            <p class="prompt-text">${escapeHtml(p.check_prompt)}</p>
-            <button class="copy-prompt-btn" type="button">Copy prompt</button>
-          </details>`;
-      }
-      promptsHtml += '</div>';
-    }
 
-    card.innerHTML = `
-      <div class="pattern-header">
-        <div class="pattern-name-group">
-          <div class="pattern-name">${escapeHtml(meta.name)}</div>
-          <div class="pattern-gloss">${escapeHtml(meta.gloss || '')}</div>
-        </div>
-        <div class="pattern-status-group">
-          <div class="pattern-score">${scoreLabel}</div>
-          <div class="pattern-status">${statusLabels[p.status] || p.status || ''}</div>
-        </div>
-      </div>
-      <div class="pattern-body">
-        <div class="pattern-section">
-          <div class="label">Vulnerability</div>
-          <div>${escapeHtml(p.vulnerability || '')}</div>
-        </div>
-        <div class="pattern-section">
-          <div class="label">Why it matters</div>
-          <div>${escapeHtml(p.why_it_matters || '')}</div>
-        </div>
-        <div class="pattern-section">
-          <div class="label">How to address it</div>
-          <ul>${addressHtml}</ul>
-        </div>
-        ${promptsHtml}
-      </div>
-    `;
+      html += `
+        <div class="domain-header domain-${domainColor}">${escapeHtml(domainLabel)}</div>
+        <div class="opportunity-card">
+          <div class="opp-meta">
+            <span class="opp-pattern">${escapeHtml(opp.pattern)}</span>
+            <span class="opp-code">${escapeHtml(opp.code)}</span>
+            <span class="opp-flag ${flagClass}">${flagLabel}</span>
+          </div>
+          ${opp.what_it_does_well ? `<div class="opp-section"><div class="opp-label">What this assignment does well on this pattern</div><div>${escapeHtml(opp.what_it_does_well)}</div></div>` : ''}
+          <div class="opp-section"><div class="opp-label">Opportunity to strengthen responsible AI use</div><div>${escapeHtml(opp.opportunity)}</div></div>
+          ${suggItems ? `<div class="opp-section"><div class="opp-label">To consider</div><ul>${suggItems}</ul></div>` : ''}
+          ${promptsHtml}
+        </div>`;
+    });
+    oppsSection.innerHTML = html;
 
-    card.querySelectorAll('.copy-prompt-btn').forEach(btn => {
+    // Attach copy prompt handlers
+    oppsSection.querySelectorAll('.copy-prompt-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const promptText = btn.previousElementSibling.textContent;
         try {
           await navigator.clipboard.writeText(promptText);
-          const original = btn.textContent;
+          const orig = btn.textContent;
           btn.textContent = 'Copied';
-          setTimeout(() => { btn.textContent = original; }, 1500);
-        } catch (e) {
-          btn.textContent = 'Could not copy';
-        }
+          setTimeout(() => { btn.textContent = orig; }, 1500);
+        } catch (e) { btn.textContent = 'Could not copy'; }
       });
     });
+  } else {
+    oppsSection.innerHTML = '';
+  }
 
-    list.appendChild(card);
-  });
+  // Re-run note
+  document.getElementById('rerunNote').textContent = parsed.rerun_note || 'ShowWork surfaces the highest-leverage opportunity in each domain. Running this assignment again after revising may surface a different opportunity — that is intentional. Each revision closes one gap and makes the next one visible.';
 
   document.getElementById('results').classList.add('visible');
   document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Collapsible sections
-document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
-  trigger.addEventListener('click', () => {
-    const targetId = trigger.dataset.target;
-    const body = document.getElementById(targetId);
-    const icon = trigger.querySelector('.collapsible-icon');
-    const isCollapsed = body.classList.contains('collapsed');
-    body.classList.toggle('collapsed', !isCollapsed);
-    icon.innerHTML = isCollapsed ? '&#8722;' : '+';
+// Download and copy
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const title = document.getElementById('resultsTitle').textContent;
+  const summary = document.getElementById('summaryBox').textContent;
+  const strengthsHtml = document.getElementById('strengthsSection').innerHTML;
+  const oppsHtml = document.getElementById('opportunitiesSection').innerHTML;
+  const rerunText = document.getElementById('rerunNote').textContent;
+  const disclaimerHtml = document.getElementById('disclaimerBox').innerHTML;
+
+  const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>${escapeHtml(title)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Source Sans 3',sans-serif;background:#F8F6F3;color:#1a1a1a;margin:0;padding:2rem;line-height:1.6;}
+.page{max-width:780px;margin:0 auto;}
+.hdr{border-bottom:3px solid #BB0000;padding-bottom:1rem;margin-bottom:1.5rem;}
+.hdr h1{font-size:1.4rem;font-weight:600;margin:0 0 0.25rem;}
+.summary{background:#fff;border-left:4px solid #C8932B;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:0.95rem;line-height:1.7;white-space:pre-wrap;}
+.disclaimer-box{background:#FBF1DD;border:1px solid #C8932B;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:0.9rem;}
+.strengths-header{font-size:1.15rem;font-weight:600;border-bottom:2px solid #639922;padding-bottom:0.5rem;margin-bottom:1rem;}
+.strength-card{background:#fff;border-left:4px solid #639922;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.domain-header{color:#fff;padding:0.6rem 1.25rem;border-radius:8px 8px 0 0;font-weight:600;}
+.domain-d1{background:#5794AD;} .domain-d2{background:#C8932B;} .domain-d3{background:#BB0000;}
+.opportunity-card{background:#fff;border-radius:0 0 10px 10px;padding:1.25rem;margin-bottom:1.5rem;}
+.opp-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5794AD;margin-bottom:0.3rem;}
+.opp-section{margin-bottom:0.85rem;padding-bottom:0.75rem;border-bottom:1px solid #E2DED6;}
+.opp-section:last-of-type{border-bottom:none;}
+.rerun{background:#fff;border-left:4px solid #5794AD;border-radius:8px;padding:1rem 1.25rem;margin-top:1rem;font-size:0.9rem;}
+.footer{margin-top:2rem;padding-top:1rem;border-top:1px solid #C2C6C8;font-size:0.78rem;color:#6D6E71;text-align:center;}
+.prompt-group{display:none;}
+@media print{body{background:white;padding:0;}}
+</style></head><body><div class="page">
+<div class="hdr"><div style="font-size:0.75rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#C8932B;margin-bottom:0.4rem;">ShowWork &middot; Edgewood University</div>
+<h1>${escapeHtml(title)}</h1></div>
+${disclaimerHtml}
+<div class="summary">${escapeHtml(summary)}</div>
+${strengthsHtml}
+${oppsHtml}
+<div class="rerun">${escapeHtml(rerunText)}</div>
+<div class="footer">&copy; 2026 Edgewood University &middot; Henry Predolin College of Health Sciences &middot; Created by Tamala S. Bradham, PhD, DHA</div>
+</div></body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ShowWork-review-${Date.now()}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('copyTextBtn').addEventListener('click', async () => {
+  const title = document.getElementById('resultsTitle').textContent;
+  const summary = document.getElementById('summaryBox').textContent;
+  const rerun = document.getElementById('rerunNote').textContent;
+
+  let text = `${title}\n${'─'.repeat(60)}\n\n${summary}\n\n${'─'.repeat(60)}\n\n`;
+
+  // Strengths
+  document.querySelectorAll('.strength-card').forEach(card => {
+    const code = card.querySelector('.s-code')?.textContent || '';
+    const pattern = card.querySelector('.s-pattern')?.textContent || '';
+    const body = card.querySelector('.s-body')?.textContent || '';
+    text += `WHERE YOU'RE DOING INCREDIBLE WORK\n${pattern} (${code})\n${body}\n\n`;
   });
+
+  // Opportunities
+  document.querySelectorAll('.opportunity-card').forEach((card, i) => {
+    const domainEl = card.previousElementSibling;
+    const domain = domainEl?.textContent || '';
+    const pattern = card.querySelector('.opp-pattern')?.textContent || '';
+    const code = card.querySelector('.opp-code')?.textContent || '';
+    const flag = card.querySelector('.opp-flag')?.textContent || '';
+    text += `${domain.toUpperCase()}\n${pattern} · ${code} · ${flag}\n`;
+    card.querySelectorAll('.opp-section').forEach(sec => {
+      const label = sec.querySelector('.opp-label')?.textContent || '';
+      const items = sec.querySelectorAll('li');
+      if (items.length > 0) {
+        text += `\n${label}\n`;
+        items.forEach(li => { text += `  • ${li.textContent}\n`; });
+      } else {
+        const content = sec.querySelector('div:not(.opp-label)')?.textContent?.trim() || '';
+        if (content) text += `\n${label}\n${content}\n`;
+      }
+    });
+    text += '\n' + '─'.repeat(60) + '\n\n';
+  });
+
+  text += `NOTE\n${rerun}\n\n© 2026 Edgewood University · Henry Predolin College of Health Sciences · Created by Tamala S. Bradham, PhD, DHA`;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copyTextBtn');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  } catch (e) {
+    alert('Could not copy automatically. Please select the results and copy manually.');
+  }
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('errorBox').innerHTML = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 </script>
 </body>
