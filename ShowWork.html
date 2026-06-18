@@ -1048,22 +1048,25 @@ Total possible score: 27. Report the total and a band:
 - 14-21 (50-79%): Developing — meaningful opportunities to strengthen
 - Below 14: Worth a focused redesign conversation
 
-OUTPUT STRUCTURE — respond ONLY with valid JSON, no markdown fences, no preamble:
+OUTPUT STRUCTURE — respond ONLY with valid JSON, no markdown fences, no preamble.
+
+CRITICAL: The "patterns" field below is NOT optional. It is a required output field. You MUST include all nine pattern codes with a score of 1, 2, or 3 for each. Do not omit any pattern. Do not calculate scores internally and leave them out of the output. Every score must appear in the JSON.
+
 {
   "title": "short descriptive title for this review based on assignment type and purpose",
   "summary": "2-3 sentences. Warm, specific, direct. Name what the assignment is trying to accomplish, acknowledge its strongest design elements, and name the highest-leverage opportunity across all domains. Weave in the score and band naturally — e.g. 'With a score of 19 out of 27, this assignment is in the Developing range...' Written in second person.",
   "total_score": 0,
   "band": "Strong foundation | Developing | Worth a focused redesign conversation",
   "patterns": [
-    { "code": "D1P1", "score": 1 },
-    { "code": "D1P2", "score": 2 },
-    { "code": "D1P3", "score": 3 },
-    { "code": "D2P1", "score": 1 },
-    { "code": "D2P2", "score": 2 },
-    { "code": "D2P3", "score": 1 },
-    { "code": "D3P1", "score": 3 },
-    { "code": "D3P2", "score": 2 },
-    { "code": "D3P3", "score": 3 }
+    { "code": "D1P1", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" },
+    { "code": "D1P2", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" },
+    { "code": "D1P3", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" },
+    { "code": "D2P1", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" },
+    { "code": "D2P2", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" },
+    { "code": "D2P3", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" },
+    { "code": "D3P1", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" },
+    { "code": "D3P2", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" },
+    { "code": "D3P3", "score": 1, "note": "REQUIRED — replace 1 with actual score 1, 2, or 3" }
   ],
   "strengths": [
     {
@@ -1092,7 +1095,7 @@ OUTPUT STRUCTURE — respond ONLY with valid JSON, no markdown fences, no preamb
 }
 
 RULES:
-0. MANDATORY — NON-NEGOTIABLE: You must score ALL NINE patterns (D1P1, D1P2, D1P3, D2P1, D2P2, D2P3, D3P1, D3P2, D3P3) with a score of 1, 2, or 3. Every single pattern must appear in a "patterns" array in your JSON output with a numeric score. Returning null, omitting a pattern, or leaving any pattern unscored is not permitted under any circumstances. The total_score is always calculated out of 27 (9 patterns x 3 points each). If you have limited information, use your best judgment to assign a score — but you must assign one for every pattern. There are no exceptions to this rule regardless of which AI system is running this prompt.
+0. MANDATORY — NON-NEGOTIABLE: The JSON output must contain a "patterns" array with exactly nine entries, one for each of D1P1, D1P2, D1P3, D2P1, D2P2, D2P3, D3P1, D3P2, D3P3, each with a numeric score of 1, 2, or 3. This is a required output field, not a summary or selection. Calculating scores internally and omitting them from the output is not compliant with this instruction. The strengths and opportunities arrays contain your curated analysis — the patterns array contains the complete scores for all nine. Both are required. The total_score must equal the sum of all nine pattern scores, always out of 27. If you have limited information about the assignment, use your best judgment to assign a score for every pattern — but you must output a score for all nine regardless of which AI system is running this prompt.
 1. Include EXACTLY ONE strength entry for the highest-scoring pattern overall (score 3 preferred, or highest available). If two patterns genuinely tie at the top, include both. Never include more than two strengths.
 2. Include EXACTLY ONE opportunity per domain (three total) — the pattern in that domain where a single targeted change would have the most downstream effect.
 3. flag must be "additive" if the change adds something to the existing assignment without restructuring it, or "structural" if it requires redesigning something.
