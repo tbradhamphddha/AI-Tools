@@ -1054,6 +1054,17 @@ OUTPUT STRUCTURE — respond ONLY with valid JSON, no markdown fences, no preamb
   "summary": "2-3 sentences. Warm, specific, direct. Name what the assignment is trying to accomplish, acknowledge its strongest design elements, and name the highest-leverage opportunity across all domains. Weave in the score and band naturally — e.g. 'With a score of 19 out of 27, this assignment is in the Developing range...' Written in second person.",
   "total_score": 0,
   "band": "Strong foundation | Developing | Worth a focused redesign conversation",
+  "patterns": [
+    { "code": "D1P1", "score": 1 },
+    { "code": "D1P2", "score": 2 },
+    { "code": "D1P3", "score": 3 },
+    { "code": "D2P1", "score": 1 },
+    { "code": "D2P2", "score": 2 },
+    { "code": "D2P3", "score": 1 },
+    { "code": "D3P1", "score": 3 },
+    { "code": "D3P2", "score": 2 },
+    { "code": "D3P3", "score": 3 }
+  ],
   "strengths": [
     {
       "code": "D1P1",
@@ -1081,6 +1092,7 @@ OUTPUT STRUCTURE — respond ONLY with valid JSON, no markdown fences, no preamb
 }
 
 RULES:
+0. MANDATORY — NON-NEGOTIABLE: You must score ALL NINE patterns (D1P1, D1P2, D1P3, D2P1, D2P2, D2P3, D3P1, D3P2, D3P3) with a score of 1, 2, or 3. Every single pattern must appear in a "patterns" array in your JSON output with a numeric score. Returning null, omitting a pattern, or leaving any pattern unscored is not permitted under any circumstances. The total_score is always calculated out of 27 (9 patterns x 3 points each). If you have limited information, use your best judgment to assign a score — but you must assign one for every pattern. There are no exceptions to this rule regardless of which AI system is running this prompt.
 1. Include EXACTLY ONE strength entry for the highest-scoring pattern overall (score 3 preferred, or highest available). If two patterns genuinely tie at the top, include both. Never include more than two strengths.
 2. Include EXACTLY ONE opportunity per domain (three total) — the pattern in that domain where a single targeted change would have the most downstream effect.
 3. flag must be "additive" if the change adds something to the existing assignment without restructuring it, or "structural" if it requires redesigning something.
@@ -1088,7 +1100,7 @@ RULES:
 5. Write as a thoughtful colleague who respects the faculty member's design work. Celebrate what's working. Be specific — reference actual language from the assignment.
 6. If the assignment is minimal (prompt only, no rubric or competency), acknowledge in the summary that findings are based on limited context and may be refined with more information.
 7. Consider the program level and placement context when calibrating findings — a capstone student should be held to a higher bar for demonstrating competency than a first-semester student.
-8. AI use transparency (D2P3) is always worth assessing — even if the assignment seems strong, the absence of explicit AI use documentation is worth naming as an additive opportunity.`;
+8. AI use transparency (D2P3) is always worth assessing — even if the assignment seems strong, the absence of explicit AI use documentation is worth naming as an additive opportunity. D2P3 must always have a score of 1, 2, or 3.`;
 }
 
 function buildUserContent() {
@@ -1257,6 +1269,20 @@ function escapeHtml(str) {
 
 function renderResults(parsed) {
   lastParsed = parsed;
+
+  // Validate all 9 patterns are scored
+  const allCodes = Object.keys(PATTERNS);
+  const scoredCodes = (parsed.patterns || []).map(p => p.code);
+  const missingCodes = allCodes.filter(c => !scoredCodes.includes(c));
+  const unscoredCodes = (parsed.patterns || []).filter(p => !p.score || isNaN(Number(p.score))).map(p => p.code);
+
+  const errorBox = document.getElementById('errorBox');
+  if (missingCodes.length > 0 || unscoredCodes.length > 0) {
+    const problemCodes = [...new Set([...missingCodes, ...unscoredCodes])].join(', ');
+    errorBox.innerHTML = `<div class="error-box"><strong>Incomplete scoring:</strong> The AI did not score all nine patterns. The following were missing or unscored: ${problemCodes}. The total score and table below may not be accurate. Try running the review again, or go back to your AI tool and say: "Please rescore all nine patterns \u2014 every pattern from D1P1 through D3P3 must have a score of 1, 2, or 3."</div>`;
+  } else {
+    errorBox.innerHTML = '';
+  }
   // Title and score meta
   document.getElementById('resultsTitle').textContent = parsed.title || (selectedType ? selectedType.name + ': ShowWork review' : 'ShowWork review');
   if (parsed.total_score !== undefined && parsed.band) {
@@ -1375,8 +1401,17 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
   if (lastParsed) {
     // Collect all pattern scores from strengths and opportunities
     const allScored = {};
-    (lastParsed.strengths || []).forEach(s => { allScored[s.code] = { pattern: s.pattern, domain: s.domain, score: s.score }; });
-    (lastParsed.opportunities || []).forEach(o => { allScored[o.code] = { pattern: o.pattern, domain: o.domain, score: o.score }; });
+    // Use the full patterns array (all nine) as the source of truth for scores
+    (lastParsed.patterns || []).forEach(p => {
+      if (p.code && p.score) {
+        allScored[p.code] = { pattern: p.pattern || PATTERNS[p.code]?.name || p.code, domain: p.domain || PATTERNS[p.code]?.domain, score: Number(p.score) };
+      }
+    });
+    // Fall back to strengths/opportunities if patterns array is missing
+    if (Object.keys(allScored).length === 0) {
+      (lastParsed.strengths || []).forEach(s => { allScored[s.code] = { pattern: s.pattern, domain: s.domain, score: s.score }; });
+      (lastParsed.opportunities || []).forEach(o => { allScored[o.code] = { pattern: o.pattern, domain: o.domain, score: o.score }; });
+    }
 
     // Group by domain
     const domainColors = { D1: '#5794AD', D2: '#C8932B', D3: '#BB0000' };
