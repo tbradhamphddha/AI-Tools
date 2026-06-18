@@ -850,7 +850,7 @@
       <div id="disclaimerBox"></div>
       <div class="summary-box" id="summaryBox"></div>
       <div id="strengthsSection"></div>
-      <div id="opportunitiesSection"></div>
+      <div id="opportunitiesSection" style="margin-top: 2rem;"></div>
       <div class="rerun-note" id="rerunNote"></div>
       <div class="save-row">
         <button class="save-btn download" id="downloadBtn">&#8681; Download as report</button>
@@ -915,6 +915,7 @@ const FIELD_DESCRIPTIONS = {
 let selectedType = null;
 let selectedMode = null;
 let selectedProvider = null;
+let lastParsed = null;
 
 // Build type grid
 const typeGrid = document.getElementById('typeGrid');
@@ -1255,6 +1256,7 @@ function escapeHtml(str) {
 }
 
 function renderResults(parsed) {
+  lastParsed = parsed;
   // Title and score meta
   document.getElementById('resultsTitle').textContent = parsed.title || (selectedType ? selectedType.name + ': ShowWork review' : 'ShowWork review');
   if (parsed.total_score !== undefined && parsed.band) {
@@ -1297,7 +1299,7 @@ function renderResults(parsed) {
   // Opportunities by domain
   const oppsSection = document.getElementById('opportunitiesSection');
   if (parsed.opportunities && parsed.opportunities.length > 0) {
-    let html = '';
+    let html = `<div style="font-family:'Playfair Display',Georgia,serif; font-weight:600; font-size:1.25rem; color:var(--eu-black); margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:2px solid var(--eu-red);">Opportunities to strengthen responsible AI use</div>`;
     parsed.opportunities.forEach(opp => {
       const domain = DOMAINS[opp.domain] || { label: 'Domain', color: 'd1' };
       const domainLabel = domain.label;
@@ -1361,11 +1363,97 @@ function renderResults(parsed) {
 // Download and copy
 document.getElementById('downloadBtn').addEventListener('click', () => {
   const title = document.getElementById('resultsTitle').textContent;
+  const meta = document.getElementById('resultsMeta').textContent;
   const summary = document.getElementById('summaryBox').textContent;
   const strengthsHtml = document.getElementById('strengthsSection').innerHTML;
   const oppsHtml = document.getElementById('opportunitiesSection').innerHTML;
   const rerunText = document.getElementById('rerunNote').textContent;
   const disclaimerHtml = document.getElementById('disclaimerBox').innerHTML;
+
+  // Build score table from lastParsed
+  let scoreTableHtml = '';
+  if (lastParsed) {
+    // Collect all pattern scores from strengths and opportunities
+    const allScored = {};
+    (lastParsed.strengths || []).forEach(s => { allScored[s.code] = { pattern: s.pattern, domain: s.domain, score: s.score }; });
+    (lastParsed.opportunities || []).forEach(o => { allScored[o.code] = { pattern: o.pattern, domain: o.domain, score: o.score }; });
+
+    // Group by domain
+    const domainColors = { D1: '#5794AD', D2: '#C8932B', D3: '#BB0000' };
+    const domainLabels = {
+      D1: "Domain 1: Student's own context and judgment",
+      D2: "Domain 2: Visible thinking",
+      D3: "Domain 3: Doing something with knowledge"
+    };
+
+    let tableRows = '';
+    let domainTotals = { D1: { score: 0, max: 0 }, D2: { score: 0, max: 0 }, D3: { score: 0, max: 0 } };
+
+    ['D1','D2','D3'].forEach(domain => {
+      const domainPatterns = Object.entries(PATTERNS)
+        .filter(([code, p]) => p.domain === domain);
+
+      // Domain group header row
+      tableRows += `<tr style="background:${domainColors[domain]}22;">
+        <td colspan="4" style="padding:7px 10px;font-size:12px;font-weight:700;color:${domainColors[domain]};letter-spacing:0.05em;border-bottom:1px solid ${domainColors[domain]};">${domainLabels[domain]}</td>
+      </tr>`;
+
+      domainPatterns.forEach(([code, p]) => {
+        const scored = allScored[code];
+        const score = scored ? scored.score : '—';
+        const numScore = scored ? scored.score : 0;
+        const barWidth = scored ? Math.round((numScore / 3) * 80) : 0;
+        const barColor = numScore === 3 ? '#639922' : numScore === 2 ? '#C8932B' : '#BB0000';
+        const label = numScore === 3 ? 'Strong' : numScore === 2 ? 'Developing' : numScore === 1 ? 'Strengthen' : '';
+
+        if (scored) { domainTotals[domain].score += numScore; domainTotals[domain].max += 3; }
+
+        tableRows += `<tr>
+          <td style="padding:7px 10px;font-size:12px;color:#6D6E71;border-bottom:1px solid #E2DED6;">${escapeHtml(code)}</td>
+          <td style="padding:7px 10px;font-size:13px;border-bottom:1px solid #E2DED6;">${escapeHtml(p.name)}</td>
+          <td style="padding:7px 10px;font-size:13px;border-bottom:1px solid #E2DED6;text-align:center;font-weight:600;">${score} / 3</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #E2DED6;">
+            ${scored ? `<div style="display:flex;align-items:center;gap:6px;"><div style="width:${barWidth}px;height:8px;background:${barColor};border-radius:4px;"></div><span style="font-size:11px;color:#6D6E71;">${label}</span></div>` : '<span style="font-size:11px;color:#C2C6C8;">not assessed</span>'}
+          </td>
+        </tr>`;
+      });
+
+      // Domain subtotal row
+      const dt = domainTotals[domain];
+      const pct = dt.max > 0 ? Math.round((dt.score / dt.max) * 100) : 0;
+      tableRows += `<tr style="background:#F8F6F3;">
+        <td colspan="2" style="padding:6px 10px;font-size:12px;font-weight:600;color:${domainColors[domain]};border-bottom:2px solid ${domainColors[domain]};">Domain subtotal</td>
+        <td style="padding:6px 10px;font-size:12px;font-weight:600;text-align:center;border-bottom:2px solid ${domainColors[domain]};">${dt.score} / ${dt.max}</td>
+        <td style="padding:6px 10px;font-size:12px;color:#6D6E71;border-bottom:2px solid ${domainColors[domain]};">${pct}%</td>
+      </tr>`;
+    });
+
+    const total = lastParsed.total_score || 0;
+    const band = lastParsed.band || '';
+
+    scoreTableHtml = `
+      <div style="margin:1.5rem 0;">
+        <div style="font-size:1.1rem;font-weight:600;border-bottom:2px solid #BB0000;padding-bottom:0.5rem;margin-bottom:1rem;">Scores by domain and pattern</div>
+        <table style="width:100%;border-collapse:collapse;font-family:'Source Sans 3',sans-serif;">
+          <thead>
+            <tr style="background:#1a1a1a;color:white;">
+              <th style="padding:8px 10px;font-size:12px;font-weight:600;text-align:left;">Code</th>
+              <th style="padding:8px 10px;font-size:12px;font-weight:600;text-align:left;">Pattern</th>
+              <th style="padding:8px 10px;font-size:12px;font-weight:600;text-align:center;">Score</th>
+              <th style="padding:8px 10px;font-size:12px;font-weight:600;text-align:left;">Rating</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows}</tbody>
+          <tfoot>
+            <tr style="background:#1a1a1a;color:white;">
+              <td colspan="2" style="padding:8px 10px;font-size:13px;font-weight:600;">Total</td>
+              <td style="padding:8px 10px;font-size:13px;font-weight:600;text-align:center;">${total} / 27</td>
+              <td style="padding:8px 10px;font-size:12px;">${escapeHtml(band)}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>`;
+  }
 
   const html = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><title>${escapeHtml(title)}</title>
@@ -1375,6 +1463,7 @@ body{font-family:'Source Sans 3',sans-serif;background:#F8F6F3;color:#1a1a1a;mar
 .page{max-width:780px;margin:0 auto;}
 .hdr{border-bottom:3px solid #BB0000;padding-bottom:1rem;margin-bottom:1.5rem;}
 .hdr h1{font-size:1.4rem;font-weight:600;margin:0 0 0.25rem;}
+.hdr .meta{font-size:0.85rem;color:#6D6E71;margin-top:0.25rem;}
 .summary{background:#fff;border-left:4px solid #C8932B;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:0.95rem;line-height:1.7;white-space:pre-wrap;}
 .disclaimer-box{background:#FBF1DD;border:1px solid #C8932B;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:0.9rem;}
 .strengths-header{font-size:1.15rem;font-weight:600;border-bottom:2px solid #639922;padding-bottom:0.5rem;margin-bottom:1rem;}
@@ -1390,10 +1479,14 @@ body{font-family:'Source Sans 3',sans-serif;background:#F8F6F3;color:#1a1a1a;mar
 .prompt-group{display:none;}
 @media print{body{background:white;padding:0;}}
 </style></head><body><div class="page">
-<div class="hdr"><div style="font-size:0.75rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#C8932B;margin-bottom:0.4rem;">ShowWork &middot; Edgewood University</div>
-<h1>${escapeHtml(title)}</h1></div>
+<div class="hdr">
+  <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#C8932B;margin-bottom:0.4rem;">ShowWork &middot; Edgewood University</div>
+  <h1>${escapeHtml(title)}</h1>
+  <div class="meta">${escapeHtml(meta)}</div>
+</div>
 ${disclaimerHtml}
 <div class="summary">${escapeHtml(summary)}</div>
+${scoreTableHtml}
 ${strengthsHtml}
 ${oppsHtml}
 <div class="rerun">${escapeHtml(rerunText)}</div>
